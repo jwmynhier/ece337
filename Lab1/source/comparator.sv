@@ -21,6 +21,10 @@ module comparator
 	reg lte;
 
 	always @ (a, b) begin: COM
+		gt = 0;
+		lt = 0;
+		eq = 0;
+
 		if (!(a > b)) begin
 			lte = 1'b1;
 		end else begin
@@ -32,8 +36,8 @@ module comparator
 			gte = 1'b0;
 		end
 		if ((lte == 1'b1) && (gte == 1'b1)) begin
-			gt = 0'b0;
-			lt = 0'b0;
+			gt = 1'b0;
+			lt = 1'b0;
 			eq = 1'b1;
 		end else if (!(lte == 1'b1)) begin
 			gt = 1'b1;
