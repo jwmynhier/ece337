@@ -22,12 +22,20 @@ module comparator
 
 	always @ (a, b) begin: COM
 		if (!(a > b)) begin
-			lte <= 1'b1;
+			lte = 1'b1;
+		end else begin
+			lte = 1'b0;
 		end
 		if (!(b > a)) begin
-			gte <= 1'b1;
+			gte = 1'b1;
+		end else begin
+			gte = 1'b0;
 		end
-		if (!(lte == 1'b1)) begin
+		if ((lte == 1'b1) && (gte == 1'b1)) begin
+			gt = 0'b0;
+			lt = 0'b0;
+			eq = 1'b1;
+		end else if (!(lte == 1'b1)) begin
 			gt = 1'b1;
 			lt = 1'b0;
 			eq = 1'b0;
@@ -35,10 +43,6 @@ module comparator
 			gt = 1'b0;
 			lt = 1'b1;
 			eq = 1'b0;
-		end else begin
-			gt = 1'b0;
-			lt = 1'b0;
-			eq = 1'b1;
 		end
 	end
 endmodule
