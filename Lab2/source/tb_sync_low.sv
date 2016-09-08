@@ -172,6 +172,11 @@ module tb_sync_low();
 		end
 		
 		// STUDENT: Add your tests after this point
+		// attempt to clear up metastable behavior befor emoving on.
+		tb_n_rst	= 1'b0; 	// Activate reset
+		tb_async_in	= 1'b1;		// Set to be the the non-reset value
+		#(CLK_PERIOD * 0.5);		
+
 		// Test Case 6: Normal Operation with Input as a '0'
 		@(negedge tb_clk); 
 		tb_test_num = tb_test_num + 1;

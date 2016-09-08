@@ -172,12 +172,11 @@ module tb_sync_high();
 		end
 		
 		// STUDENT: Add your tests after this point
-		// Initialize all of the test inputs
-		tb_n_rst	= 1'b0;		// Initialize to be inactive
-		tb_async_in	= 1'b0;		// Initialize to be low
-		tb_test_num = 0;
-		tb_test_case = "Test bench reinitializaton";
-		#(0.1);	
+		// attempt to reset metastable behavior before continuing.
+		#(0.1);
+		tb_n_rst	= 1'b1; 	// Activate reset
+		tb_async_in	= 1'b1;		// Set to be the the non-reset value
+		#(CLK_PERIOD * 0.5);
 
 		// Test Case 6: Normal Operation with Input as a '0'
 		@(negedge tb_clk); 
