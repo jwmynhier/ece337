@@ -11,6 +11,12 @@ module adder_16bit
 	output wire [15:0] sum,
 	output wire overflow
 );
+	always @ (a, b)
+	begin
+		// Check input values
+		assert(!(a & 'z) && !(a & 'x) && !(b & 'z) && !(b & 'x))
+			else $error("Inputs to 16bit adder were incorrect.");
+	end
 
 	// STUDENT: Fill in the correct port map with parameter override syntax for using your n-bit ripple carry adder design to be an 8-bit ripple carry adder design
 	adder_nbit #(16) IN (.a(a[15:0]), .b(b[15:0]), .carry_in(carry_in), .sum(sum[15:0]), .overflow(overflow));
