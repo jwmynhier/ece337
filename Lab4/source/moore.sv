@@ -23,6 +23,7 @@ module moore
 
 	fsr_state next_state;
 	fsr_state curr_state;
+	logic next_o;
 
 	// Store the state.
 	always_ff @ (posedge clk, negedge n_rst)
@@ -40,6 +41,7 @@ module moore
 	always_comb
 	begin
 		next_state = HAS0;
+		next_o = '0;
 		case (curr_state)
 			HAS0:
 			begin
@@ -79,6 +81,7 @@ module moore
 				end else // i == 1
 				begin
 					next_state = HAS1011;
+					next_o = '1;
 				end
 			end
 			HAS1011:
@@ -94,8 +97,6 @@ module moore
 		endcase
 	end
 
-	logic next_o;
-
 	// store output value.
 	always_ff @ (posedge clk, negedge n_rst)
 	begin
@@ -108,14 +109,5 @@ module moore
 		end
 	end
 
-	//output logic
-	always_comb
-	begin
-		next_o = 0;
-		if (curr_state == HAS1011 && ((next_state == HAS0) || (next_state == HAS1)))
-		begin
-			next_o = 1;
-		end
-	end
 
 endmodule

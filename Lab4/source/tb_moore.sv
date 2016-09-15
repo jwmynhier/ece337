@@ -73,7 +73,6 @@ module tb_moore
 						
 					end
 					
-					#(CLK_PERIOD/2.0)
 					if (tb_o == fb_expected_o)
 					begin
 						$info("Test %0d: PASS",fb_test_num);
