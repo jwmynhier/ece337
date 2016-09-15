@@ -20,39 +20,51 @@ module flex_pts_sr
 	output logic serial_out
 );
 	logic [NUM_BITS-1:0] data;
+	logic [NUM_BITS-1:0] next_data;
 
 	always_ff @ (posedge clk, negedge n_rst) 
 	begin
 		if (n_rst == 1'b0) begin
-			serial_out = '1;
-			//$display("RESET!  next: %b, par: %b", next_out, parallel_out);
+			data = '1;
 		end else begin
-			serial_out = next_out;
-			//$display("UPDATE! next: %b, par: %b", next_out, parallel_out);
+			data = next_data;
 		end
 	end
 
 	always_comb
 	begin
-		next_store = parallel_in;
-
-		if (shift_enable == '1) 
+		next_data = data;
+		//$display("BEFORE: in: %b out: %b\n", serial_in, next_out[NUM_BITS-1:0]);
+		//$display("%d par_out: %b", NUM_BITS, parallel_out[NUM_BITS-1:0]);
+		//$display("%d %d", NUM_BITS, SHIFT_MSB);
+		if (load_enable == 1'b1)
 		begin
-			//$display("BEFORE: in: %b out: %b\n", serial_in, next_out[NUM_BITS-1:0]);
-			//$display("%d par_out: %b", NUM_BITS, parallel_out[NUM_BITS-1:0]);
-			//$display("%d %d", NUM_BITS, SHIFT_MSB);
+			next_data = parallel_in;
+		end else if (shift_enable == 1'b1)
+		begin
 			if (SHIFT_MSB == 1) 
 			begin  // most siginificant bit first
-				next_out = {parallel_out[NUM_BITS-2:0],serial_in};
+				next_data = {data[NUM_BITS-2:0],1'b1};
 				//$display("MSB!");
 			end else 
 			begin // least significant bit first
-				next_out = {serial_in,parallel_out[NUM_BITS-1:1]};
+				next_data = {1'b1,data[NUM_BITS-1:1]};
 			end
+		end
 
 			//$display("AFTER: in: %b out: %b\n", serial_in, next_out[NUM_BITS-1:0]);
 			//$display("EXPECTED: %b\n", {serial_in,parallel_out[NUM_BITS-1:1]});
-
-		end 
 	end
+
+	always_comb
+	begin
+		if (SHIFT_MSB == 1)
+		begin
+			serial_out = data[NUM_BITS-1];
+		end else
+		begin
+			serial_out = data[0];
+		end
+	end
+
 endmodule
