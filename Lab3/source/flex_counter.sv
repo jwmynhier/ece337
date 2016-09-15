@@ -29,7 +29,6 @@ module flex_counter
 			count_out = '0;
 		end else begin
 			count_out = next_count;
-			#0.25;
 		end
 	end
 
@@ -44,14 +43,11 @@ module flex_counter
 			if (count_out == rollover_val)
 			begin
 				next_count = '0 + 1'b1;
-				#0.25;
 			end else
 			begin
 				next_count = next_count + 1;
-				#0.25;
 			end
 		end
-		#0.25;
 	end
 
 	logic next_flag;
