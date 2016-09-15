@@ -132,7 +132,7 @@ module tb_flex_counter
 		begin
 			
 			#0.25
-			if (tb_count_out == 4'b0001)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 3: PASS");
 			end else
@@ -170,7 +170,7 @@ module tb_flex_counter
 		begin
 			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 4: PASS");
 			end else
@@ -207,7 +207,7 @@ module tb_flex_counter
 		begin
 			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 5: PASS");
 			end else
@@ -243,7 +243,7 @@ module tb_flex_counter
 		begin
 			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 6: PASS");
 			end else

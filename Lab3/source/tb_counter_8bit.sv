@@ -13,7 +13,7 @@ module tb_counter_8bit
 	// use default bit length
 	localparam SIZE = 8;
 	
-	localparam CLK_PERIOD = 2.5;
+	localparam CLK_PERIOD = 4.5;
 	reg tb_clk;
 
 	//setup clock
@@ -126,7 +126,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 3: PASS");
 			end else
@@ -159,7 +159,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 4: PASS");
 			end else
@@ -190,7 +190,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 5: PASS");
 			end else
@@ -220,7 +220,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 6: PASS");
 			end else
@@ -251,7 +251,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 7: PASS");
 			end else
@@ -282,7 +282,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 8: PASS");
 			end else
@@ -313,7 +313,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 8'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 9: PASS");
 			end else
@@ -332,7 +332,7 @@ module tb_counter_8bit
 
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b10000001;
+		tb_rollover_val = 8'b10000001;
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
@@ -344,7 +344,7 @@ module tb_counter_8bit
 		@(posedge tb_rollover_flag)
 		begin
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == tb_rollover_val)
 			begin
 				$info("Test 10: PASS");
 			end else
