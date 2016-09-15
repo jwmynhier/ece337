@@ -1,0 +1,50 @@
+Coverage Report Summary Data by instance
+
+=================================================================================
+=== Instance: /tb_counter_8bit/DUT/IN
+=== Design Unit: work.flex_counter
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                           15        15         0     100.0
+    Branches                        11        11         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     36        36         0     100.0
+
+=================================================================================
+=== Instance: /tb_counter_8bit/DUT
+=== Design Unit: work.counter_8bit
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                            0         0         0     100.0
+    Branches                         0         0         0     100.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     42        42         0     100.0
+
+=================================================================================
+=== Instance: /tb_counter_8bit
+=== Design Unit: work.tb_counter_8bit
+=================================================================================
+    Enabled Coverage            Active      Hits    Misses % Covered
+    ----------------            ------      ----    ------ ---------
+    Stmts                          166       156        10      93.9
+    Branches                        20        10        10      50.0
+    FEC Condition Terms              0         0         0     100.0
+    FEC Expression Terms             0         0         0     100.0
+    FSMs                                                       100.0
+        States                       0         0         0     100.0
+        Transitions                  0         0         0     100.0
+    Toggle Bins                     42        42         0     100.0
+
+
+Total Coverage By Instance (filtered view): 87.4%
+
