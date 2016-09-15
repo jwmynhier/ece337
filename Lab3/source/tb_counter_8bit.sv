@@ -1,18 +1,17 @@
 // $Id: mg111
-// File name:   tb_flex_counter.sv
+// File name:   tb_counter_8bit.sv
 // Created:     9/15/2016
 // Author:      Joseph Mynhier
 // Lab Section: 4
 // Version:     1.0  Initial Design Entry
-// Description: scalable counter testbed module.
+// Description: 8 bit counter testbed module.
 
 `timescale 1ns / 10ps
 
-module tb_flex_counter
+module tb_counter_8bit
 ();
-	int test_num;
 	// use default bit length
-	localparam SIZE = 4;
+	localparam SIZE = 8;
 	
 	localparam CLK_PERIOD = 2.5;
 	reg tb_clk;
@@ -33,7 +32,7 @@ module tb_flex_counter
 	logic [SIZE-1:0] tb_count_out;
 	logic tb_rollover_flag;
 
-	flex_counter DUT(.clear(tb_clear), .clk(tb_clk), .count_enable(tb_count_enable), .n_rst(tb_n_rst),
+	counter_8bit DUT(.clear(tb_clear), .clk(tb_clk), .count_enable(tb_count_enable), .n_rst(tb_n_rst),
 		.rollover_val(tb_rollover_val), .count_out(tb_count_out), .rollover_flag(tb_rollover_flag));
 
 	initial
@@ -41,10 +40,9 @@ module tb_flex_counter
 
 		$display("Initial!");
 		//Test 1, start count, async reset
-		test_num = 1;
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b0100;
+		tb_rollover_val = 8'b0100;
 
 		@(posedge tb_clk);
 		tb_n_rst	<= 1'b0;
@@ -77,7 +75,6 @@ module tb_flex_counter
 		tb_n_rst = 1'b1;
 
 		//Test 2, start count, sync reset
-		test_num = 2;
 		tb_count_enable = 1'b1;
 
 		@(posedge tb_clk);
@@ -106,8 +103,7 @@ module tb_flex_counter
 		@(posedge tb_clk);
 		@(posedge tb_clk);
 
-		//Test 3, verify count 1100
-		test_num = 3;
+		//Test 3, verify count 11000000
 		tb_n_rst = 1'b0;
 
 		@(posedge tb_clk);
@@ -117,7 +113,7 @@ module tb_flex_counter
 
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b1100;
+		tb_rollover_val = 8'b11000000;
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
@@ -127,26 +123,20 @@ module tb_flex_counter
 		@(posedge tb_clk);
 		@(posedge tb_clk);
 
-
 		@(posedge tb_rollover_flag)
 		begin
-			
 			#0.25
-			if (tb_count_out == 4'b0001)
+			if (tb_count_out == 8'b1)
 			begin
 				$info("Test 3: PASS");
 			end else
 			begin
 				$error("Test 3: FAIL");
 			end
-			
+
 		end
 
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-
-		//Test 4, verify count 0011
-		test_num = 4;
+		//Test 4, verify count 00000011
 		tb_n_rst = 1'b0;
 
 		@(posedge tb_clk);
@@ -156,7 +146,7 @@ module tb_flex_counter
 
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b0011;
+		tb_rollover_val = 8'b00000011;
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
@@ -168,9 +158,8 @@ module tb_flex_counter
 
 		@(posedge tb_rollover_flag)
 		begin
-			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == 8'b1)
 			begin
 				$info("Test 4: PASS");
 			end else
@@ -179,11 +168,7 @@ module tb_flex_counter
 			end
 		end
 
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-
-		//Test 5, verify count 1001
-		test_num = 5;
+		//Test 5, verify count 00000110
 		tb_n_rst = 1'b0;
 
 		@(posedge tb_clk);
@@ -193,7 +178,7 @@ module tb_flex_counter
 
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b1001;
+		tb_rollover_val = 8'b00000110;
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
@@ -202,12 +187,10 @@ module tb_flex_counter
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
-
 		@(posedge tb_rollover_flag)
 		begin
-			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == 8'b1)
 			begin
 				$info("Test 5: PASS");
 			end else
@@ -215,12 +198,7 @@ module tb_flex_counter
 				$error("Test 5: FAIL");
 			end
 		end
-
-		@(posedge tb_clk);
-		@(posedge tb_clk);
-
-		//Test 6, verify count 0110
-		test_num = 6;
+		//Test 6, verify count 00001100
 		tb_n_rst = 1'b0;
 
 		@(posedge tb_clk);
@@ -230,7 +208,7 @@ module tb_flex_counter
 
 		tb_clear = 0; //inactive
 		tb_count_enable = 0; //inactive
-		tb_rollover_val = 4'b0110;
+		tb_rollover_val = 8'b00001100;
 
 		@(posedge tb_clk);
 		@(posedge tb_clk);
@@ -241,9 +219,8 @@ module tb_flex_counter
 		@(posedge tb_clk);
 		@(posedge tb_rollover_flag)
 		begin
-			
 			#0.25
-			if (tb_count_out == 4'b1)
+			if (tb_count_out == 8'b1)
 			begin
 				$info("Test 6: PASS");
 			end else
@@ -252,7 +229,128 @@ module tb_flex_counter
 			end
 		end
 
+		//Test 7, verify count 00011000
+		tb_n_rst = 1'b0;
+
 		@(posedge tb_clk);
 		@(posedge tb_clk);
+
+		tb_n_rst = 1'b1;
+
+		tb_clear = 0; //inactive
+		tb_count_enable = 0; //inactive
+		tb_rollover_val = 8'b00011000;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_count_enable = 1'b1;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+		@(posedge tb_rollover_flag)
+		begin
+			#0.25
+			if (tb_count_out == 8'b1)
+			begin
+				$info("Test 7: PASS");
+			end else
+			begin
+				$error("Test 7: FAIL");
+			end
+		end
+
+		//Test 8, verify count 00110000
+		tb_n_rst = 1'b0;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_n_rst = 1'b1;
+
+		tb_clear = 0; //inactive
+		tb_count_enable = 0; //inactive
+		tb_rollover_val = 8'b00110000;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_count_enable = 1'b1;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+		@(posedge tb_rollover_flag)
+		begin
+			#0.25
+			if (tb_count_out == 8'b1)
+			begin
+				$info("Test 8: PASS");
+			end else
+			begin
+				$error("Test 8: FAIL");
+			end
+		end
+
+		//Test 9, verify count 01100000
+		tb_n_rst = 1'b0;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_n_rst = 1'b1;
+
+		tb_clear = 0; //inactive
+		tb_count_enable = 0; //inactive
+		tb_rollover_val = 8'b01100000;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_count_enable = 1'b1;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+		@(posedge tb_rollover_flag)
+		begin
+			#0.25
+			if (tb_count_out == 8'b1)
+			begin
+				$info("Test 9: PASS");
+			end else
+			begin
+				$error("Test 9: FAIL");
+			end
+		end
+
+		//Test 10, verify count 10000001
+		tb_n_rst = 1'b0;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_n_rst = 1'b1;
+
+		tb_clear = 0; //inactive
+		tb_count_enable = 0; //inactive
+		tb_rollover_val = 4'b10000001;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+
+		tb_count_enable = 1'b1;
+
+		@(posedge tb_clk);
+		@(posedge tb_clk);
+		@(posedge tb_rollover_flag)
+		begin
+			#0.25
+			if (tb_count_out == 4'b1)
+			begin
+				$info("Test 10: PASS");
+			end else
+			begin
+				$error("Test 10: FAIL");
+			end
+		end
 	end
 endmodule
