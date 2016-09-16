@@ -138,31 +138,31 @@ module tb_moore
 		@(posedge tb_clk);
 
 		//Test 2
-		tb_test_data = 5'b01011;
+		tb_test_data = 5'b01101;
 		tb_exp_o = 1'b1;
 		test_num = test_num + 1;
 		five_bits (tb_test_data, test_num, tb_exp_o);
 	
 		//Test 3
-		tb_test_data = 5'b10111;
+		tb_test_data = 5'b11010;
 		tb_exp_o = 1'b0;
 		test_num = test_num + 1;
 		five_bits (tb_test_data, test_num, tb_exp_o);
 
 		//Test 4
-		tb_test_data = 5'b10110;
+		tb_test_data = 5'b11011;
 		tb_exp_o = 1'b0;
 		test_num = test_num + 1;
 		five_bits (tb_test_data, test_num, tb_exp_o);
 
 		//Test 5
-		tb_test_data = 5'b01001;
+		tb_test_data = 5'b10111;
 		tb_exp_o = 1'b0;
 		test_num = test_num + 1;
 		five_bits (tb_test_data, test_num, tb_exp_o);
 
 		//Test 6
-		tb_test_data = 5'b10100;
+		tb_test_data = 5'b01100;
 		tb_exp_o = 1'b0;
 		test_num = test_num + 1;
 		five_bits (tb_test_data, test_num, tb_exp_o);	

@@ -17,9 +17,9 @@ module moore
 	typedef enum logic [NUM_STATE_BITS-1:0] 
 		{	HAS0,
 			HAS1,
-			HAS10,
-			HAS101,
-			HAS1011 } fsr_state;
+			HAS11,
+			HAS110,
+			HAS1101 } fsr_state;
 
 	fsr_state next_state;
 	fsr_state curr_state;
@@ -57,41 +57,41 @@ module moore
 			begin
 				if (i == 0)
 				begin
-					next_state = HAS10;
+					next_state = HAS0;
 				end else // i == 1
 				begin
-					next_state = HAS1;
+					next_state = HAS11;
 				end
 			end
-			HAS10:
+			HAS11:
+			begin
+				if (i == 0)
+				begin
+					next_state = HAS110;
+				end else // i == 1
+				begin
+					next_state = HAS11;
+				end
+			end
+			HAS110:
 			begin
 				if (i == 0)
 				begin
 					next_state = HAS0;
 				end else // i == 1
 				begin
-					next_state = HAS101;
-				end
-			end
-			HAS101:
-			begin
-				if (i == 0)
-				begin
-					next_state = HAS10;
-				end else // i == 1
-				begin
-					next_state = HAS1011;
+					next_state = HAS1101;
 					next_o = '1;
 				end
 			end
-			HAS1011:
+			HAS1101:
 			begin
 				if (i == 0)
 				begin
-					next_state = HAS10;
+					next_state = HAS0;
 				end else // i == 1
 				begin
-					next_state = HAS1;
+					next_state = HAS11;
 				end
 			end
 		endcase
