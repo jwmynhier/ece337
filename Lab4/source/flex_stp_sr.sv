@@ -38,6 +38,7 @@ module flex_stp_sr
 			if (SHIFT_MSB == 1) 
 				next_out = {parallel_out[NUM_BITS-2:0],serial_in};
 			end else 
+			begin
 				next_out = {serial_in,parallel_out[NUM_BITS-1:1]};
 			end
 		end 

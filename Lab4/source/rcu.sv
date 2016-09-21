@@ -11,16 +11,16 @@ module rcu
 	input clk,
 	input n_rst,
 	input start_bit_detected,
-	input packet_done
+	input packet_done,
 	input framing_error,
-	output sbc_clear,
-	output sbc_enable,
-	output load_buffer,
-	output enable_timer
+	output logic sbc_clear,
+	output logic sbc_enable,
+	output logic load_buffer,
+	output logic enable_timer
 );
 
 
-	typedef enum [2:0] {
+	typedef enum bit [2:0] {
 			WAIT,
 			CLEAR,
 			READ,
@@ -35,7 +35,7 @@ module rcu
 	begin
 		if (n_rst == 0)
 		begin
-			state <= '0;
+			state <= WAIT;
 		end else
 		begin
 			state <= next_state;
@@ -49,7 +49,7 @@ module rcu
 		case(state)
 		WAIT:
 		begin
-			if (state_bit_detected == '0)
+			if (start_bit_detected == '0)
 			begin
 				next_state = WAIT;
 			end else
@@ -94,7 +94,7 @@ module rcu
 		sbc_clear = '0;
 		sbc_enable = '0;
 		load_buffer = '0;
-		enable timer = '0;
+		enable_timer = '0;
 
 		if (state == CLEAR)
 		begin

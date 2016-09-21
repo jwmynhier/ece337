@@ -31,19 +31,32 @@ module rcv_block
 	rcu FSM(.clk(clk), .n_rst(n_rst), .load_buffer(load_buffer), 
 			.start_bit_detected(start_bit_detected), 
 			.packet_done(packet_done), .framing_error(framing_error),
-			.sbc_clear(sbc_clear), .load_buffer(load_buffer), 
+			.sbc_clear(sbc_clear), .sbc_enable(sbc_enable), 
 			.enable_timer(enable_timer));
 
 	// Timing Controller
-	timer TC(
+	timer TC(.clk(clk), .n_rst(n_rst), .timer_enable(timer_enable), 
+			.shift_strobe(shift_strobe), .packet_done(packet_done));
 
 	// Start-Bit Detector
+	start_bit_det SBD(.clk(clk), .n_rst(n_rst), .serial_in(serial_in),
+			.start_bit_detected(start_bit_detected));
 
-	// 9-bit Shift REgister
+	// 9-bit Shift Register
+	sr_9bit SR9(.clk(clk), .n_rst(n_rst), .shift_strobe(shift_strobe), 
+			.serial_in(serial_in), .packet_data(packet_data),
+			.stop_bit(stop_bit));
 
 	// Stop-Bit Checker
+	stop_bit_chk SBC(.clk(clk), .n_rst(n_rst), .sbc_clear(sbc_clear),
+			.sbc_enable(sbc_enable), .stop_bit(stop_bit),
+			.framing_error(framing_error));
 
 	// RX Data Buffer
+	rx_data_buff RDB(.clk(clk), .n_rst(n_rst), .load_buffer(load_buffer),
+			.packet_data(packet_data), .data_read(data_read),
+			.rx_data(rx_data), .data_ready(data_ready), 
+			.overrun_error(overrun_error));
 
 
 endmodule
