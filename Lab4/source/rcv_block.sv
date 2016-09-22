@@ -25,7 +25,7 @@ module rcv_block
 	logic packet_done;
 	logic shift_strobe;
 	logic start_bit_detected;
-	logic start_bit;
+	logic stop_bit;
 
 	// RCU
 	rcu FSM(.clk(clk), .n_rst(n_rst), .load_buffer(load_buffer), 
@@ -35,7 +35,7 @@ module rcv_block
 			.enable_timer(enable_timer));
 
 	// Timing Controller
-	timer TC(.clk(clk), .n_rst(n_rst), .timer_enable(timer_enable), 
+	timer TC(.clk(clk), .n_rst(n_rst), .enable_timer(enable_timer), 
 			.shift_strobe(shift_strobe), .packet_done(packet_done));
 
 	// Start-Bit Detector

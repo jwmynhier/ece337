@@ -24,8 +24,8 @@ module rcu
 			WAIT,
 			CLEAR,
 			READ,
-			CHECK,
-			LOAD} state_type;
+			CHECK_START,
+			CHECK_FINISH} state_type;
 
 	state_type state;
 	state_type next_state;
@@ -43,7 +43,7 @@ module rcu
 	end
 
 	// Next state logic 
-	always
+	always_comb
 	begin
 		next_state = state;
 		case(state)
@@ -68,20 +68,14 @@ module rcu
 				next_state = READ;
 			end else
 			begin
-				next_state = CHECK;
+				next_state = CHECK_START;
 			end
 		end
-		CHECK:
+		CHECK_START:
 		begin
-			if (framing_error == '0)
-			begin
-				next_state = LOAD;
-			end else
-			begin
-				next_state = WAIT;
-			end
+			next_state = CHECK_FINISH;
 		end
-		LOAD:
+		CHECK_FINISH:
 		begin
 			next_state = WAIT;
 		end		
@@ -102,12 +96,15 @@ module rcu
 		end else if (state == READ)
 		begin
 			enable_timer = '1;
-		end else if (state == CHECK)
+		end else if (state == CHECK_START)
 		begin
 			sbc_enable = '1;
-		end else if (state == LOAD)
+		end else if (state == CHECK_FINISH)
 		begin
-			load_buffer = '1;
+			if (framing_error == '0)
+			begin
+				load_buffer = '1;
+			end
 		end 
 	end
 

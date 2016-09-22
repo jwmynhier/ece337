@@ -22,7 +22,8 @@ module flex_stp_sr
 
 	always_ff @ (posedge clk, negedge n_rst) 
 	begin
-		if (n_rst == 1'b0) begin
+		if (n_rst == 1'b0) 
+		begin
 			parallel_out = '1;
 		end else begin
 			parallel_out = next_out;
@@ -36,9 +37,10 @@ module flex_stp_sr
 		if (shift_enable == '1) 
 		begin
 			if (SHIFT_MSB == 1) 
-				next_out = {parallel_out[NUM_BITS-2:0],serial_in};
-			end else 
 			begin
+				next_out = {parallel_out[NUM_BITS-2:0],serial_in};
+			end else
+			begin 
 				next_out = {serial_in,parallel_out[NUM_BITS-1:1]};
 			end
 		end 

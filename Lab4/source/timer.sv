@@ -10,25 +10,25 @@ module timer
 (
 	input clk,
 	input n_rst,
-	input timer_enable,
+	input enable_timer,
 	output shift_strobe,
 	output packet_done
 );
 
+	logic count_clear;
+	logic [3:0] count_out1;
 	// Strobe the shift signal at every 10 cycles.
-	localparam RV_C1 = 'd10;
-	flex_counter C1(4)(.clk(clk), .n_rst(n_rst), .clear(count_clear), 
-			.count_enable(enable_timer), .rollover_val(RV_C1), 
-			.rollover_flag(shift_strobe));
+	flex_counter #(.NUM_CNT_BITS('d4)) C1(.clk(clk), .n_rst(n_rst), .clear(count_clear), 
+			.count_enable(enable_timer), .rollover_val(4'd10), 
+			.rollover_flag(shift_strobe), .count_out(count_out1));
 
 	// When 9 shifts have been counted, strobe packet_done.
-	localparam RV_C2 = 'd9;
-	flex_counter C2(4)(.clk(clk), .n_rst(n_rst), .clear(count_clear), 
-			.count_enable(shift_strobe), .rollover_val(RV_C2), 
-			.rollover_flag(packet_done));
+	logic [3:0] count_out2;
+	flex_counter #(.NUM_CNT_BITS('d4)) C2(.clk(clk), .n_rst(n_rst), .clear(count_clear), 
+			.count_enable(shift_strobe), .rollover_val(4'd9), 
+			.rollover_flag(packet_done), .count_out(count_out2));
 
 	// Set up the clear signal.
-	logic count_clear;
 	always_ff @ (posedge clk, negedge n_rst)
 	begin
 		if (n_rst == '0)

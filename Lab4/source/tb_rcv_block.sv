@@ -104,6 +104,8 @@ module tb_rcv_block();
 	end
 	endtask
 	
+	logic tb_cause_overrun;
+
 	task check_outputs;
 		input [7:0] expected_rx_data;
 		input expected_data_ready;
@@ -178,6 +180,63 @@ module tb_rcv_block();
 		#(CLK_PERIOD / 2);
 	end
 
+	// Run a typical test case.
+	task run_test;
+		input [7:0] task_test_data;
+		input task_test_stop_bit;
+		input time task_test_bit_period;
+		input task_test_data_read;
+		input task_expected_overrun;
+	begin
+		// Synchronize to falling edge of clock to prevent timing shifts from prior test case(s)
+		@(negedge tb_clk);
+		tb_test_case += 1;
+
+		// Setup packet info for debugging/verificaton signals
+		tb_test_data 		= task_test_data;
+		tb_test_stop_bit	= task_test_stop_bit;
+		tb_test_bit_period	= task_test_bit_period;
+		tb_test_data_read	= task_test_data_read;
+		
+		// Define expected ouputs for this test case
+		// For a good packet RX Data value should match data sent
+		tb_expected_rx_data 			= tb_test_data;
+		// Valid stop bit ('1') -> Valid data -> Active data ready output
+		tb_expected_data_ready		= tb_test_stop_bit; 
+		// Framing error if and only if bad stop_bit ('0') was sent
+		tb_expected_framing_error = ~tb_test_stop_bit;
+		// Not intentionally creating an overrun condition -> overrun should be 0
+		tb_expected_overrun	= task_expected_overrun;
+		
+		if (tb_cause_overrun == '0)
+		begin
+			// DUT Reset
+			reset_dut;
+		end
+		
+		// Send packet
+		send_packet(tb_test_data, tb_test_stop_bit, tb_test_bit_period);
+		
+		// Wait for 2 data periods to allow DUT to finish processing the packet
+		#(tb_test_bit_period * 2);
+		
+		// Check outputs
+		check_outputs(tb_expected_rx_data, tb_expected_data_ready, tb_expected_framing_error, tb_expected_overrun, tb_test_data_read);
+	end
+	endtask
+
+	task run_series_tests;
+		input [7:0] series_test_data;
+		input series_test_stop_bit;
+		input series_test_data_read;
+		input series_expected_overrun;
+	begin
+		run_test(series_test_data, series_test_stop_bit, WORST_SLOW_DATA_PERIOD, series_test_data_read, series_expected_overrun);
+		run_test(series_test_data, series_test_stop_bit, NORM_DATA_PERIOD, series_test_data_read, series_expected_overrun);
+		run_test(series_test_data, series_test_stop_bit, WORST_FAST_DATA_PERIOD, series_test_data_read, series_expected_overrun);
+	end
+	endtask
+
 	// Actual test bench process
 	initial
 	begin : TEST_PROC
@@ -185,7 +244,8 @@ module tb_rcv_block();
 		tb_n_rst			= 1'b1; // Initially inactive
 		tb_serial_in	= 1'b1; // Initially idle
 		tb_data_read	= 1'b0; // Initially inactive
-		
+		tb_cause_overrun = '0;
+
 		// Get away from Time = 0
 		#0.1; 
 		
@@ -284,6 +344,31 @@ module tb_rcv_block();
 		check_outputs(tb_expected_rx_data, tb_expected_data_ready, tb_expected_framing_error, tb_expected_overrun, tb_test_data_read);
 	
 		// Append additonal test cases here (such as overrun case)
+
+		// Test case 3: Normal packet, max slower data rate
+		// input order:
+		//	task_test_data, task_test_stop_bit, task_test_bit_period, task_test_data_read, task_expected_voerrun
+		run_test(8'b11010101, 1'b1, NORM_DATA_PERIOD, 1'b1, 1'b0);
+
+		// Test case 4: setup test for overrun.
+		// input order:
+		//	task_test_data, task_test_stop_bit, task_test_data_read, task_expected_voerrun
+		tb_cause_overrun = '1;
+		run_test(8'b00101010, 1'b1, NORM_DATA_PERIOD, 1'b0, 1'b0);
+
+		// tEst case 5:  overrun .
+		run_test(8'b10101000, 1'b1, NORM_DATA_PERIOD, 1'b0, 1'b1);
+		// test case 6:  end overrun .
+		run_test(8'b00101101, 1'b1, NORM_DATA_PERIOD, 1'b1, 1'b1);
+		tb_cause_overrun = '0;
+
+		// Test cases 7, 8, 9: test framing error
+		// input order:
+		//	task_test_data, task_test_stop_bit, task_test_data_read, task_expected_voerrun
+		run_test(8'b11111111, 1'b0, WORST_SLOW_DATA_PERIOD, 1'b0, 1'b0);
+		run_test(8'b11111111, 1'b0, NORM_DATA_PERIOD, 1'b0, 1'b0);
+		run_test(8'b11111111, 1'b0, WORST_FAST_DATA_PERIOD, 1'b0, 1'b0);
+
 		
 	end
 
