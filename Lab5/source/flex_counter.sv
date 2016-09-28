@@ -43,9 +43,11 @@ module flex_counter
 			if (count_out == rollover_val)
 			begin
 				next_count = '0 + 1'b1;
+				next_flag = '1;
 			end else
 			begin
 				next_count = next_count + 1;
+				next_flag = '0;
 			end
 		end
 	end
@@ -60,18 +62,6 @@ module flex_counter
 		end else
 		begin
 			rollover_flag = next_flag;
-		end
-	end
-	
-	always_comb
-	begin
-		next_flag = rollover_flag;
-		if (next_count == rollover_val)
-		begin
-			next_flag = 1'b1;
-		end else
-		begin
-			next_flag = 1'b0;
 		end
 	end
 
