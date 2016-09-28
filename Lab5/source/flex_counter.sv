@@ -32,6 +32,8 @@ module flex_counter
 		end
 	end
 
+	logic next_flag;
+
 	always_comb
 	begin
 		next_count = count_out;
@@ -51,8 +53,6 @@ module flex_counter
 			end
 		end
 	end
-
-	logic next_flag;
 
 	always_ff @ (posedge clk, negedge n_rst)
 	begin

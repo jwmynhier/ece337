@@ -23,8 +23,8 @@ module controller
 	output logic err
 );
 
-	typedef enum [4:0] {
-		IDLE,	STORE,	ZERO,	SORT1,	SORT2,	SORT3
+	typedef enum bit [4:0] {
+		IDLE,	STORE,	ZERO,	SORT1,	SORT2,	SORT3,
 		SORT4,	MUL1,	ADD1,	MUL2,	SUB1,	MUL3,
 		ADD2,	MUL4,	SUB2,	EIDLE,	LOADF0,	WAITF1,
 		LOADF1,	WAITF2,	LOADF2,	WAITF3,	LOADF3 } state_type;
@@ -98,7 +98,7 @@ module controller
 		end
 		STORE:	
 		begin
-			op = Load;
+			op = Load1;
 			dest = DataNew;
 			
 			if (dr == '0)
@@ -106,6 +106,7 @@ module controller
 				next_state = EIDLE;
 				next_modwait = '0;
 			end else
+			begin
 				next_state = ZERO;
 				next_modwait = '1;
 			end
@@ -250,7 +251,7 @@ module controller
 		end
 		EIDLE:	
 		begin
-			error = '1;
+			err = '1;
 			if (dr == '0)
 			begin
 				next_state = EIDLE;
@@ -263,7 +264,7 @@ module controller
 		end
 		LOADF0:	
 		begin
-			op = Load;
+			op = Load2;
 			next_modwait = '1;
 			dest = Coef0;
 			clear = 1;
@@ -275,12 +276,13 @@ module controller
 			begin
 				next_state = WAITF1;
 			end else
+			begin
 				next_state = LOADF1;
 			end
 		end
 		LOADF1:	
 		begin
-			op = Load;
+			op = Load2;
 			next_modwait = '1;
 			dest = Coef1;
 			next_state = WAITF2;	
@@ -291,12 +293,13 @@ module controller
 			begin
 				next_state = WAITF2;
 			end else
+			begin
 				next_state = LOADF2;
 			end
 		end
 		LOADF2:	
 		begin
-			op = Load;
+			op = Load2;
 			next_modwait = '1;
 			dest = Coef2;
 			next_state = WAITF3;	
@@ -307,12 +310,13 @@ module controller
 			begin
 				next_state = WAITF3;
 			end else
+			begin
 				next_state = LOADF3;
 			end
 		end
 		LOADF3:
 		begin
-			op = Load;
+			op = Load2;
 			next_modwait = '0;
 			dest = Coef3;
 			next_state = IDLE;	
