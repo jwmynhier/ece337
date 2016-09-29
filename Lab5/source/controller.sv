@@ -72,6 +72,7 @@ module controller
 	begin
 
 		next_modwait = '0;
+		next_state = IDLE;
 		clear = '0;
 		cnt_up = '0;
 		err = '0;
