@@ -160,8 +160,11 @@ module tb_fir_filter();
 		// Updated verification signals
 		tb_expected_fir_out = expected_fir_out;
 		tb_expected_err			= expected_err;
+		if (tb_test_sample_num == 'd1005)
+		begin
+				expected_one_k_samples = '1;
+		end 
 		tb_expected_one_k_samples = expected_one_k_samples;
-		
 		// Handle the handshake timing with a timeout 'thread'
 		fork : DL
 		begin
@@ -186,7 +189,7 @@ module tb_fir_filter();
 		// Handle the fir_out
 		if(expected_fir_out == tb_fir_out)
 		begin
-			$info("Test Case #%0d Sample #%0d: Had a correct fir_out value", tb_test_case_num, tb_test_sample_num);
+			//$info("Test Case #%0d Sample #%0d: Had a correct fir_out value", tb_test_case_num, tb_test_sample_num);
 		end
 		else
 		begin
@@ -196,7 +199,7 @@ module tb_fir_filter();
 		// Handle the error
 		if(expected_err == tb_err)
 		begin
-			$info("Test Case #%0d Sample #%0d: Had a correct err value", tb_test_case_num, tb_test_sample_num);
+			//$info("Test Case #%0d Sample #%0d: Had a correct err value", tb_test_case_num, tb_test_sample_num);
 		end
 		else
 		begin
@@ -206,7 +209,7 @@ module tb_fir_filter();
 		// Handle the one_k_samples
 		if(expected_one_k_samples == tb_one_k_samples)
 		begin
-			$info("Test Case #%0d Sample #%0d: Had a correct one_k_samples value", tb_test_case_num, tb_test_sample_num);
+			//$info("Test Case #%0d Sample #%0d: Had a correct one_k_samples value", tb_test_case_num, tb_test_sample_num);
 		end
 		else
 		begin
@@ -251,19 +254,52 @@ module tb_fir_filter();
 	initial
 	begin // TODO: Add more standard test cases here
 		// Populate the test vector array to use
-		tb_test_vectors = new[2];
+		tb_test_vectors = new[8];
 		// Test case 0
 		tb_test_vectors[0].coeffs		= {{COEFF_5}, {COEFF1}, {COEFF1}, {COEFF_5}};
 		tb_test_vectors[0].samples	= {16'd100, 16'd100, 16'd100, 16'd100};
-		tb_test_vectors[0].results	= {16'd0, 16'd50, 16'd50 ,16'd50};
+		tb_test_vectors[0].results	= {16'd0, 16'd50, 16'd50, 16'd50};
 		tb_test_vectors[0].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
 		// Test case 1
 		tb_test_vectors[1].coeffs		= tb_test_vectors[0].coeffs;
 		tb_test_vectors[1].samples	= {16'd1000, 16'd1000, 16'd100, 16'd100};
-		tb_test_vectors[1].results	= {16'd450, 16'd500, 16'd50 ,16'd50};
+		tb_test_vectors[1].results	= {16'd450, 16'd500, 16'd50, 16'd50};
 		tb_test_vectors[1].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
+		// Test case 2
+		tb_test_vectors[2].coeffs		= tb_test_vectors[0].coeffs;
+		tb_test_vectors[2].samples	= {16'd65000, 16'd0, 16'd65000, 16'd0};
+		tb_test_vectors[2].results	= {16'd33572, 16'd65000, 16'd32500, 16'd0};
+		tb_test_vectors[2].errors		= {1'b1, 1'b0, 1'b0, 1'b0};
+		// Test case 3
+		tb_test_vectors[3].coeffs		= {{COEFF_25}, {COEFF1}, {COEFF1}, {COEFF_25}};
+		tb_test_vectors[3].samples	= {16'hFF00, 16'hFF, 16'hFF00, 16'hFF};
+		tb_test_vectors[3].results	= {16'd49727, 16'd64962, 16'd16065, 16'd63};
+		tb_test_vectors[3].errors		= {1'b1, 1'b0, 1'b0, 1'b0};
+		// Test case 4
+		tb_test_vectors[4].coeffs		= tb_test_vectors[0].coeffs;
+		tb_test_vectors[4].samples	= {16'h0, 16'hFF00, 16'h00, 16'hFF00};
+		tb_test_vectors[4].results	= {16'd33152, 16'd33152, 16'd65280, 16'd32640};
+		tb_test_vectors[4].errors		= {1'b1, 1'b1, 1'b0, 1'b0};
+		// Test case 5
+		tb_test_vectors[5].coeffs		= {{COEFF_125}, {COEFF_25}, {COEFF_25}, {COEFF_125}};
+		tb_test_vectors[5].samples	= {16'd8, 16'd8, 16'd8, 16'd8};
+		tb_test_vectors[5].results	= {16'd0, 16'd1, 16'd1, 16'd1};
+		tb_test_vectors[5].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
+		// Test case 6
+		tb_test_vectors[6].coeffs		= {{COEFF_5}, {COEFF1}, {COEFF1}, {COEFF_5}};
+		tb_test_vectors[6].samples	= {16'd2, 16'd2, 16'd2, 16'd2};
+		tb_test_vectors[6].results	= {16'd0, 16'd1, 16'd1, 16'd1};
+		tb_test_vectors[6].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
+		// Test case 7
+		tb_test_vectors[7].coeffs		= {{COEFF_5}, {COEFF1}, {COEFF1}, {COEFF_5}};
+		tb_test_vectors[7].samples	= {16'd0, 16'd0, 16'd0, 16'd0};
+		tb_test_vectors[7].results	= {16'd0, 16'd0, 16'd0, 16'd0};
+		tb_test_vectors[7].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
 	end
 	
+	int i_loc;
+
+
 	// Test bench process
 	initial
 	begin
@@ -288,6 +324,17 @@ module tb_fir_filter();
 		end
 		
 		// TODO: Add non standard test cases here
+		// Load the set of coefficients
+		load_coeff(tb_test_vectors[0].coeffs);
+
+		// Reset the design
+		tb_std_test_case += 1;
+		reset_dut;
+		
+		for(i_loc = 0; i_loc < 'd1002; i_loc++)
+		begin
+			test_sample(tb_test_vectors[7].samples[0], tb_test_vectors[7].results[0], tb_test_vectors[7].errors[0], 1'b0);
+		end
 		
 	end
 endmodule

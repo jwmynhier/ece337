@@ -37,4 +37,15 @@ module counter
 		end
 	end
 
+	always_ff @ (posedge clk, negedge n_reset)
+	begin
+		if (n_reset == '0)
+		begin
+			one_k_samples = '0;
+		end else
+		begin
+			one_k_samples = next_oks;
+		end
+	end
+
 endmodule

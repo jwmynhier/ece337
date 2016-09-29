@@ -20,7 +20,7 @@ module magnitude
 	always_comb
 	begin
 		is_pos = '0;
-		if (in[16] == '1)
+		if (in[16] == 1'b1)
 			is_pos = '1;
 	end
 
@@ -30,13 +30,13 @@ module magnitude
 	always_comb
 	begin
 		min_one = in[15:0] - 16'd1;
-		flipped = min_one ^ '0;
+		flipped = ~min_one;
 	end
 
 	// multiplex the result
 	always_comb
 	begin
-		if (is_pos == '1)
+		if (is_pos == '0)
 		begin
 			out = in[15:0];
 		end else

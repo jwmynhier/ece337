@@ -37,9 +37,11 @@ module flex_counter
 	always_comb
 	begin
 		next_count = count_out;
+		next_flag = '0;
 		if (clear == 1'b1)
 		begin
 			next_count = '0;
+			next_flag = '0;
 		end else if (count_enable == 1'b1)
 		begin
 			if (count_out == rollover_val)

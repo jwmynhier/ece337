@@ -265,7 +265,7 @@ module controller
 		LOADF0:	
 		begin
 			op = Load2;
-			next_modwait = '1;
+			next_modwait = '0;
 			dest = Coef0;
 			clear = 1;
 			next_state = WAITF1;			
@@ -275,15 +275,17 @@ module controller
 			if (lc == '0)
 			begin
 				next_state = WAITF1;
+				next_modwait = '0;
 			end else
 			begin
 				next_state = LOADF1;
+				next_modwait = '1;
 			end
 		end
 		LOADF1:	
 		begin
 			op = Load2;
-			next_modwait = '1;
+			next_modwait = '0;
 			dest = Coef1;
 			next_state = WAITF2;	
 		end
@@ -292,15 +294,17 @@ module controller
 			if (lc == '0)
 			begin
 				next_state = WAITF2;
+				next_modwait = '0;
 			end else
 			begin
 				next_state = LOADF2;
+				next_modwait = '1;
 			end
 		end
 		LOADF2:	
 		begin
 			op = Load2;
-			next_modwait = '1;
+			next_modwait = '0;
 			dest = Coef2;
 			next_state = WAITF3;	
 		end
@@ -309,9 +313,11 @@ module controller
 			if (lc == '0)
 			begin
 				next_state = WAITF3;
+				next_modwait = '0;
 			end else
 			begin
 				next_state = LOADF3;
+				next_modwait = '1;
 			end
 		end
 		LOADF3:
