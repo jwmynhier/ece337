@@ -33,7 +33,31 @@ Section 4
 
 	Q What is the general syntax for each of the file IO functions 
 	  used in the provided test bench (tb_fir_filter_image.sv)?
+
 	A * int file_handle = $fopen(file_name, "file_format_specifiers");
 	  * int warning_code = $fscanf(file_handle, "format_specifier", dest_var);
+	  * int location = $ftell(file_handle);
+	  * int warning_code = $fseek(file_handle, offset, START_LOCATION);
+	  * $fclose(file_handle);
+	  * $fwrite(file_handle, "format_specifier", variable);
 
+	Q What are the different format specifiers available for use in file
+	  functions like $fscanf(...)?
+	
+	A source: http://www.csee.umbc.edu/portal/help/VHDL/verilog/system.html
+	  	   "%b %B binary
+                    %c %C character (low 8 bits)
+                    %d %D decimal  %0d for minimum width field
+                    %e %E E format floating point %15.7E
+                    %f %F F format floating point %9.7F
+                    %g %G G general format floating point
+                    %h %H hexadecimal
+                    %l %L library binding information
+                    %m %M hierarchical name, no expression
+                    %o %O octal
+                    %s %S string, 8 bits per character, 2´h00 does not print
+                    %t %T simulation time, expression is  $time
+                    %u %U unformatted two value data  0 and 1 
+                    %v %V net signal strength
+                    %z %Z unformatted four value data  0, 1, x, z"
 
