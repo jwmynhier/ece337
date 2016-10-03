@@ -110,7 +110,7 @@ module tb_fir_filter();
 		fork : SCF
 		begin
 			// Have to just pulse the lc due to it going through a synchronizer
-			#(CLK_PERIOD * 1.25);
+			#(CLK_PERIOD * 2.25);
 			tb_load_coeff = 0;
 			// Wait for modwait to deassert -> signals done with current coeff
 			@(negedge tb_modwait);
@@ -160,7 +160,7 @@ module tb_fir_filter();
 		// Updated verification signals
 		tb_expected_fir_out = expected_fir_out;
 		tb_expected_err			= expected_err;
-		if (tb_test_sample_num == 'd1005)
+		if (tb_test_sample_num == 'd1004)
 		begin
 				expected_one_k_samples = '1;
 		end 
@@ -273,7 +273,7 @@ module tb_fir_filter();
 		// Test case 3
 		tb_test_vectors[3].coeffs		= {{COEFF_25}, {COEFF1}, {COEFF1}, {COEFF_25}};
 		tb_test_vectors[3].samples	= {16'hFF00, 16'hFF, 16'hFF00, 16'hFF};
-		tb_test_vectors[3].results	= {16'd49727, 16'd64962, 16'd16065, 16'd63};
+		tb_test_vectors[3].results	= {16'd49790, 16'd64962, 16'd16065, 16'd63};
 		tb_test_vectors[3].errors		= {1'b1, 1'b0, 1'b0, 1'b0};
 		// Test case 4
 		tb_test_vectors[4].coeffs		= tb_test_vectors[0].coeffs;
@@ -335,6 +335,11 @@ module tb_fir_filter();
 		begin
 			test_sample(tb_test_vectors[7].samples[0], tb_test_vectors[7].results[0], tb_test_vectors[7].errors[0], 1'b0);
 		end
-		
+
+		tb_std_test_case += 1;
+		reset_dut;		
+		load_coeff(tb_test_vectors[0].coeffs);
+		load_coeff(tb_test_vectors[0].coeffs);
+		load_coeff(tb_test_vectors[0].coeffs);
 	end
 endmodule

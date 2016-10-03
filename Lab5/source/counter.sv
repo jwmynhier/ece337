@@ -16,22 +16,25 @@ module counter
 );
 
 	logic next_oks;		// next one k samples
-	//logic [9:0] hold_count; // do nothing with this.
-	logic rollover_flag;
+	logic [9:0] count_out; // do nothing with this.
+
 
 	flex_counter #(10) FC (.clk(clk), .n_rst(n_reset), .clear(clear),
 			.count_enable(cnt_up), .rollover_val(10'd1000), 
-			.rollover_flag(rollover_flag));
+			.count_out(count_out));
 
 	// next output flag logic
 	always_comb
 	begin
 		next_oks = '0;
-		if (rollover_flag == '1)
+		if (count_out == 10'd1000)
 		begin
 			next_oks = '1;
 		end
-		if (one_k_samples == '1 && cnt_up != '1)
+		if (cnt_up == '1)
+		begin
+			next_oks = '0;
+		end else if (one_k_samples == '1)
 		begin
 			next_oks = '1;
 		end

@@ -1,0 +1,39 @@
+Lab5 Postlab Questions
+Joe Mynhier
+ECE 337
+Section 4
+
+10.1:
+	Q What  is  the  minimum  amount  of  time  that  data_ready
+	  must  remain  asserted  to ensure  correct  operation?  
+
+	A 2
+
+	Q What  is  the  minimum  amount  of  time,  in  clock  cycles,
+	  that  data must remain valid after data_ready is asserted in 
+	  order to ensure correct operation? (You may assume that all 
+	  setup and hold times, as well as any propagation delays, are 
+	  negligible.) 
+
+	A 2 full clock cycles after the first rising clock edge that
+	  follows the assertion of data_ready
+
+
+10.2
+
+	Q How are the image files different? Does this make sense given
+	  the filter design built in the lab? Why or why not?
+
+	A The large areas of similar color have all turned very dark and
+	  the smaller regions of the same color, like the electrical dis-
+	  charges remain relatively the same. This makes sense since, with
+	  four data bytes that are the same, the results will tend towards 
+	  0 if the set of coefficients are similar to eachother. (F0 ~= F3, 
+	  F1 ~= F2).
+
+	Q What is the general syntax for each of the file IO functions 
+	  used in the provided test bench (tb_fir_filter_image.sv)?
+	A * int file_handle = $fopen(file_name, "file_format_specifiers");
+	  * int warning_code = $fscanf(file_handle, "format_specifier", dest_var);
+
+

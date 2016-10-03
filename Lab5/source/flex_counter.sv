@@ -18,10 +18,12 @@ module flex_counter
 	input wire clear,
 	input wire count_enable,
 	input wire [NUM_CNT_BITS-1:0] rollover_val,
-	output reg rollover_flag
+	output reg [NUM_CNT_BITS-1:0] count_out
 );
 	logic [NUM_CNT_BITS-1:0] next_count;
-	reg [NUM_CNT_BITS-1:0] count_out;
+
+	reg rollover_flag;
+
 
 	always_ff @ (posedge clk, negedge n_rst) 
 	begin

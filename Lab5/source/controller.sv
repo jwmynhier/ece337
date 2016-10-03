@@ -125,31 +125,31 @@ module controller
 		SORT1:	
 		begin
 			op = Copy;
-			dest = Data0;
-			src1 = Data1;
+			dest = Data3;
+			src1 = Data2;
 			next_modwait = '1;
 			next_state = SORT2;
 		end
 		SORT2:	
 		begin
 			op = Copy;
-			dest = Data1;
-			src1 = Data2;
+			dest = Data2;
+			src1 = Data1;
 			next_modwait = '1;
 			next_state = SORT3;
 		end
 		SORT3:
 		begin
 			op = Copy;
-			dest = Data2;
-			src1 = Data3;
+			dest = Data1;
+			src1 = Data0;
 			next_modwait = '1;
 			next_state = SORT4;
 		end
 		SORT4:
 		begin
 			op = Copy;
-			dest = Data3;
+			dest = Data0;
 			src1 = DataNew;
 			next_modwait = '1;
 			next_state = MUL1;
@@ -253,10 +253,14 @@ module controller
 		EIDLE:	
 		begin
 			err = '1;
-			if (dr == '0)
+			if (dr == '0 && lc == '0)
 			begin
 				next_state = EIDLE;
 				next_modwait = '0;
+			end else if (lc == '1)
+			begin
+				next_state = LOADF0;
+				next_modwait = '1;
 			end else
 			begin
 				next_state = STORE;
@@ -266,10 +270,18 @@ module controller
 		LOADF0:	
 		begin
 			op = Load2;
-			next_modwait = '0;
 			dest = Coef0;
 			clear = 1;
-			next_state = WAITF1;			
+
+			if (lc == '1)
+			begin
+				next_modwait = '1;
+				next_state = LOADF0;
+			end else
+			begin
+				next_modwait = '0;
+				next_state = WAITF1;			
+			end
 		end
 		WAITF1:
 		begin
@@ -286,9 +298,17 @@ module controller
 		LOADF1:	
 		begin
 			op = Load2;
-			next_modwait = '0;
 			dest = Coef1;
-			next_state = WAITF2;	
+
+			if (lc == '1)
+			begin
+				next_modwait = '1;
+				next_state = LOADF1;
+			end else
+			begin
+				next_modwait = '0;
+				next_state = WAITF2;			
+			end
 		end
 		WAITF2:	
 		begin
@@ -305,9 +325,17 @@ module controller
 		LOADF2:	
 		begin
 			op = Load2;
-			next_modwait = '0;
 			dest = Coef2;
-			next_state = WAITF3;	
+	
+			if (lc == '1)
+			begin
+				next_modwait = '1;
+				next_state = LOADF2;
+			end else
+			begin
+				next_modwait = '0;
+				next_state = WAITF3;			
+			end	
 		end
 		WAITF3:	
 		begin
@@ -324,9 +352,17 @@ module controller
 		LOADF3:
 		begin
 			op = Load2;
-			next_modwait = '0;
 			dest = Coef3;
-			next_state = IDLE;	
+
+			if (lc == '1)
+			begin
+				next_modwait = '1;
+				next_state = LOADF3;
+			end else
+			begin
+				next_modwait = '0;
+				next_state = IDLE;			
+			end
 		end
 		endcase
 	end
