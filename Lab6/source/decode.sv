@@ -11,7 +11,7 @@ module decode
 	input clk,
 	input n_rst,
 	input d_plus,
-	input shfit_enable,
+	input shift_enable,
 	input eop,
 	output logic d_orig
 );
@@ -34,7 +34,10 @@ module decode
 	// next old_d logic
 	always_comb
 	begin
-		if (shift_enable == '1)
+		if (eop == '1 && shift_enable == '1)
+		begin
+			next_old_d = '1;
+		end else if (shift_enable == '1)
 		begin
 			next_old_d = d_plus;
 		end else
@@ -62,14 +65,11 @@ module decode
 	begin
 		if (shift_enable == '1 && eop == '1)
 		begin
-			next_d_orig = '1;
-		end else if (shift_enable == '1)
-		begin
-			next_d_orig = ~(old_d ^ d_plus);  // XNOR
+			next_d_orig = '0;
 		end else
 		begin
-			next_d_orig = d_orig;
-		end
+			next_d_orig = old_d ^ d_plus;
+		end 
 	end
 
 endmodule
