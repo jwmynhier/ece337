@@ -18,6 +18,7 @@ module flex_counter
 	input wire clear,
 	input wire count_enable,
 	input wire [NUM_CNT_BITS-1:0] rollover_val,
+	input wire [NUM_CNT_BITS-1:0] clear_val,
 	output reg [NUM_CNT_BITS-1:0] count_out
 );
 	logic [NUM_CNT_BITS-1:0] next_count;
@@ -42,13 +43,13 @@ module flex_counter
 		next_flag = '0;
 		if (clear == 1'b1)
 		begin
-			next_count = '0;
+			next_count = clear_val;
 			next_flag = '0;
 		end else if (count_enable == 1'b1)
 		begin
 			if (count_out == rollover_val)
 			begin
-				next_count = '0 + 1'b1;
+				next_count = '0;
 				next_flag = '1;
 			end else
 			begin
