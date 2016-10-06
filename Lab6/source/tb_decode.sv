@@ -42,20 +42,28 @@ module tb_decode
 	begin
 		tb_shift_enable = '0;
 
+		#(CLK_PERIOD);
+		#(CLK_PERIOD);
+		tb_d_plus = old_d;
+		#(CLK_PERIOD);
+
 		@(negedge tb_clk)
 		begin
 			tb_shift_enable = '1;
-			tb_d_plus = old_d;
 		end
 
 		#(CLK_PERIOD);
 		tb_shift_enable = '0;
+		#(CLK_PERIOD);
+		#(CLK_PERIOD);
 		tb_d_plus = new_d;
 		#(CLK_PERIOD);
 		if (tb_d_orig != expected_orig)
 		begin
 			$error("decode send_signal FAIL old: %0d new: %0d. @ %0d", old_d, new_d, tb_test_num);
 		end
+		#(CLK_PERIOD);
+		#(CLK_PERIOD);
 	end
 	endtask
 
@@ -89,7 +97,7 @@ module tb_decode
 		// test reset
 		tb_test_num = '0;
 		reset;
-		if (tb_d_orig != '0)
+		if (tb_d_orig != '1)
 		begin
 			$error("decode power on reset FAIL");
 		end
@@ -102,7 +110,7 @@ module tb_decode
 		end
 		#(CLK_PERIOD)
 
-		if (tb_d_orig != '0)
+		if (tb_d_orig != '1)
 		begin
 			$error("decode internal reset FAIL");
 		end
@@ -122,7 +130,7 @@ module tb_decode
 		#(CLK_PERIOD);
 		tb_shift_enable = '0;
 		tb_eop = '0;
-		if (tb_d_orig != '0)
+		if (tb_d_orig != '1)
 		begin
 			$error("decode synch reset output FAIL");
 		end
@@ -131,7 +139,7 @@ module tb_decode
 		tb_test_num = tb_test_num + 1;
 		tb_d_plus = '1;
 		#(CLK_PERIOD);
-		if (tb_d_orig != '0)
+		if (tb_d_orig != '1)
 		begin
 			$error("decode synch reset internal FAIL");
 		end
@@ -148,7 +156,7 @@ module tb_decode
 			for (new_var = 2'b11; new_var >= 2'b10; new_var = new_var - 2'b1)
 			begin
 				tb_test_num = tb_test_num + 1;
-				if (old_var[0] != new_var[0])
+				if (old_var[0] == new_var[0])
 				begin
 					expected = '1;
 				end else

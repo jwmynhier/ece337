@@ -53,7 +53,7 @@ module decode
 	begin
 		if (n_rst == '0)
 		begin
-			d_orig = '0;  
+			d_orig = '1;  
 		end else
 		begin
 			d_orig = next_d_orig;
@@ -65,10 +65,13 @@ module decode
 	begin
 		if (shift_enable == '1 && eop == '1)
 		begin
-			next_d_orig = '0;
+			next_d_orig = '1;
+		end else if (shift_enable == '1)
+		begin
+			next_d_orig = next_old_d ~^ d_plus;
 		end else
 		begin
-			next_d_orig = old_d ^ d_plus;
+			next_d_orig = old_d ~^ d_plus;
 		end 
 	end
 
