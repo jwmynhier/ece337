@@ -38,7 +38,7 @@ module edge_detect
 			d_edge = '0; 
 		end else
 		begin
-			d_edge = next_edge
+			d_edge = next_edge;
 		end
 	end
 

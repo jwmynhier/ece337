@@ -8,10 +8,8 @@
 
 module eop_detect
 (
-	input clk,
-	input n_rst,
 	input d_plus,
-	input d_minus
+	input d_minus,
 	output eop
 );
 
