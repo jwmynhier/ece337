@@ -24,10 +24,10 @@ module decode
 	begin
 		if (n_rst == '0)
 		begin
-			old_d = '1;  // reset to idle line state.
+			old_d <= '1;  // reset to idle line state.
 		end else
 		begin
-			old_d = next_old_d;
+			old_d <= next_old_d;
 		end
 	end
 
@@ -53,10 +53,10 @@ module decode
 	begin
 		if (n_rst == '0)
 		begin
-			d_orig = '1;  
+			d_orig <= '1;  
 		end else
 		begin
-			d_orig = next_d_orig;
+			d_orig <= next_d_orig;
 		end
 	end
 

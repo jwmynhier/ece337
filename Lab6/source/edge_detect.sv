@@ -21,10 +21,10 @@ module edge_detect
 	begin
 		if (n_rst == '0)
 		begin
-			old_d = '1;  // reset to idle line state.
+			old_d <= '1;  // reset to idle line state.
 		end else
 		begin
-			old_d = d_plus;
+			old_d <= d_plus;
 		end
 	end
 
@@ -35,10 +35,10 @@ module edge_detect
 	begin
 		if (n_rst == '0)
 		begin
-			d_edge = '0; 
+			d_edge <= '0; 
 		end else
 		begin
-			d_edge = next_edge;
+			d_edge <= next_edge;
 		end
 	end
 
