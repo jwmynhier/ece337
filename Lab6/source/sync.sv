@@ -30,9 +30,8 @@ module sync
 			rst_val = 1'b0;
 		end
 	end
-
-	//first flip-flop
-	always_ff @ (posedge clk, posedge n_rst)
+	
+	always_ff @(posedge clk, negedge n_rst)
 	begin
 		if (n_rst == 1'b0)
 		begin
@@ -42,16 +41,16 @@ module sync
 			midline <= async_in;
 		end
 	end
-	
+
 	//second flip-flop
-	always_ff @ (posedge clk, posedge n_rst)
+	always_ff @ (posedge clk, negedge n_rst)
 	begin
 		if (n_rst == 1'b0)
 		begin
 			sync_out <= rst_val;
 		end else
 		begin
-			sync_out <= async_in;
+			sync_out <= midline;
 		end
 	end
 

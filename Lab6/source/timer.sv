@@ -39,7 +39,7 @@ module timer
 	logic [3:0] count_out2;
 	always_comb
 	begin
-		if (count_out2 == 4'd8)
+		if (count_out2 == 4'd8 || rcving == '0)
 		begin
 			count2_clear = '1;
 		end else

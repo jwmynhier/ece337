@@ -25,7 +25,8 @@ module rcu
 	typedef enum bit [5:0] 
 	{
 		IDLE,	RSYNC,	READ,	WRITE,	EIDLE,	ERR,
-		EOP_CHECK1,	EOP_CHECK2
+		EOP_CHECK1,	EOP_CHECK2,	EOP_CHECK3,
+		ERR_EOP
 	} state_type;
 	
 	state_type state;
@@ -45,6 +46,7 @@ module rcu
 	// next state logic
 	always_comb
 	begin
+		next_state = IDLE;
 		case (state)
 		IDLE:
 		begin
@@ -60,7 +62,7 @@ module rcu
 		begin
 			if (eop == '1)
 			begin
-				next_state = EIDLE;
+				next_state = ERR_EOP;
 			end else if (byte_received == '0)
 			begin
 				next_state = RSYNC;
@@ -79,7 +81,7 @@ module rcu
 				next_state = READ;
 			end else if (eop == '1)
 			begin
-				next_state = EIDLE;
+				next_state = ERR_EOP;
 			end else 
 			begin
 				next_state = WRITE;
@@ -89,7 +91,7 @@ module rcu
 		begin
 			if (eop == '1)
 			begin
-				next_state = EIDLE;
+				next_state = ERR_EOP;
 			end else
 			begin
 				next_state = EOP_CHECK1;
@@ -112,33 +114,56 @@ module rcu
 				next_state = ERR;
 			end else
 			begin
-				next_state = EIDLE;
+				next_state = ERR_EOP;
 			end
 		end
 		EOP_CHECK1:
 		begin
-			if (eop == '1)
-			begin
-				next_state = ERR;
-			end else if (shift_enable == '0)
+			if (shift_enable == '0)
 			begin
 				next_state = EOP_CHECK1;
-			end else
+			end else if (eop == '1)
 			begin
 				next_state = EOP_CHECK2;
+			end else
+			begin
+				next_state = READ;
 			end
 		end
 		EOP_CHECK2:
 		begin
-			if (eop == '1)
-			begin
-				next_state = IDLE;
-			end else if (shift_enable == '0)
+			if (shift_enable == '0)
 			begin
 				next_state = EOP_CHECK2;
+			end else if (eop == '1)
+			begin
+				next_state = EOP_CHECK3;
 			end else
 			begin
 				next_state = ERR;
+			end
+		end
+		EOP_CHECK3:
+		begin
+			if (d_edge == '0)
+			begin
+				next_state = EOP_CHECK3;
+			end else
+			begin
+				next_state = IDLE;
+			end
+		end
+		ERR_EOP:
+		begin
+			if (eop == '1)
+			begin
+				next_state = ERR_EOP;
+			end else if (d_edge == '0)
+			begin
+				next_state = ERR_EOP;
+			end else
+			begin
+				next_state = EIDLE;
 			end
 		end
 		endcase
@@ -183,6 +208,15 @@ module rcu
 		end
 		EOP_CHECK2:	
 		begin
+			rcving = '1;
+		end
+		EOP_CHECK3:	
+		begin
+			rcving = '1;
+		end
+		ERR_EOP:
+		begin
+			r_error = '1;
 			rcving = '1;
 		end
 		endcase
