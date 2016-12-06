@@ -263,6 +263,12 @@ module tb_render_module
 			      .end_x(9'd159), .end_y(8'd42), .overwrite_buff(1'b1));		
 
 		$system("python3 ./scripts/makeimg.py ./docs/render_buffer.txt ./docs/render_buffer3.png");
+
+		// Test 15: Clear a second time.
+		tb_test_num = tb_test_num + 1;
+		clear_buffer;
+
+		$system("python3 ./scripts/makeimg.py ./docs/render_buffer.txt ./docs/clear2.png");
 		$info("End of testing");
 
 	end

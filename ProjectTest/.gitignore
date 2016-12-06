@@ -23,5 +23,7 @@ schematic/*
 docs/*
 mapped/*
 reports/*
+scripts/*.txt
+scripts/*.png
 covhtmlreport/
 #*#
