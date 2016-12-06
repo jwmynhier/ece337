@@ -17,15 +17,15 @@ module decode_pro
 
 );
 
-typedef enum logic [1:0] {IDLE, CHECK, WAIT_RENDER,PULSE_HI,SETSTART,START,PWAIT,SETEND,SETCOLOR,MOVESTART,MOVEEND,STARTC}
+typedef enum logic [3:0] {IDLE, CHECK, WAIT_RENDER,PULSE_HI,SETSTART,START,PWAIT,SETEND,SETCOLOR,MOVESTART,MOVEEND,STARTC}
 state_type;
 
 state_type state, next_state;
 
-reg [16:0] start;
-reg [16:0] end1;
-reg [23:0] color;
-reg [2:0] op;
+reg [16:0] start_c;
+reg [16:0] end1_c;
+reg [23:0] color_c;
+reg [2:0] op_c;
 reg [31:0] commandreg;
 
 reg received_op_next;
@@ -41,26 +41,26 @@ reg [23:0] next_color;
 reg [2:0] next_op;
 
 
-always_ff @ (posedge clk, negedge n_rst)
+always_ff @ (posedge clk, negedge nrst)
  begin 
- if (n_rst == 0)
+ if (nrst == 0)
   begin
  	state <= IDLE;
-	start <= 17b'0;
-	end1 <= 17b'0;
-	color <= 24b'0;
-	op <= 3b'0;
-	commandreg <= 32b'0;
-	received_op_c <= 1b'0;
-	flip_buffer_c <= 1b'0;
+	start_c <= 17'b0;
+	end1_c <= 17'b0;
+	color_c <= 24'b0;
+	op_c <= 3'b0;
+	commandreg <= 32'b0;
+	received_op_c <= 1'b0;
+	flip_buffer_c <= 1'b0;
   end
  else
   begin
 	state <= next_state;
-	start <= next_start;
-	end1 <= next_end1;
-	color <= next_color;
-	op <= next_op;
+	start_c <= next_start;
+	end1_c  <= next_end1;
+	color_c  <= next_color;
+	op_c  <= next_op;
 	received_op_c <= received_op_next;
 	flip_buffer_c <= flip_buffer_next;
 	commandreg <= next_commandreg;
@@ -236,12 +236,12 @@ end
 always_comb
 begin
 	//default
-	 next_start = start ;
-	 next_end1 = end1 ;
-	 next_color = color ;
-	 next_op = op ;
-	 received_op_next = 1b'0;
-	 flip_buffer_next = 1b'0;
+	 next_start = start_c ;
+	 next_end1 = end1_c ;
+	 next_color = color_c ;
+	 next_op = op_c ;
+	 received_op_next = 1'b0;
+	 flip_buffer_next = 1'b0;
 	 next_commandreg = commandreg;
 	case(state)
 		CHECK:
@@ -250,47 +250,47 @@ begin
 		end
 		PULSE_HI:
 		begin
-			flip_buffer_next = 1b'1;
-			next_op = 3b'111;
+			flip_buffer_next = 1'b1;
+			next_op = 3'b111;
 		end
 		START:
 		begin
-			received_op_next = 1b'1;
-			next_op = 3b'110;
+			received_op_next = 1'b1;
+			next_op = 3'b110;
 		end
 		STARTC:
 		begin
-			received_op_next = 1b'1;
-			next_color = 24b'0; //assume this is white
-			next_op = 3b'000;
+			received_op_next = 1'b1;
+			next_color = 24'b0; //assume this is white
+			next_op = 3'b000;
 		end
 		SETSTART:
 		begin
 			
 			next_start = commandreg[16:0]; 
-			next_op = 3b'001;
+			next_op = 3'b001;
 		end
 		SETEND:
 		begin
 			
 			next_end1 = commandreg[16:0];
-			next_op = 3b'010;
+			next_op = 3'b010;
 		end
 		SETCOLOR:
 		begin
 			
 			next_color = commandreg[23:0];
-			next_op = 3b'011;
+			next_op = 3'b011;
 		end
 		MOVESTART:
 		begin
-			next_start = start + commandreg[16:0];
-			next_op = 3b'100;
+			next_start = start_c + commandreg[16:0];
+			next_op = 3'b100;
 		end
 		MOVEEND:
 		begin
-			next_end1 = end1 + commandreg[16:0];
-			next_op = 3b'101;
+			next_end1 = end1_c + commandreg[16:0];
+			next_op = 3'b101;
 		end
 		
 	endcase
@@ -298,6 +298,10 @@ end
 
 assign received_op = received_op_c; //output logic
 assign flip_buffer = flip_buffer_c; 
+assign start = start_c; 
+assign end1 = end1_c; 
+assign op = op_c; 
+assign color = color_c; 
 
 endmodule
  

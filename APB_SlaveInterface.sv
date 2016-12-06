@@ -52,7 +52,7 @@ begin
 				
 		end
 
-		DATA:
+		READ:
 		begin
 			if(1'b0 == apb.PSEL)
 			begin
