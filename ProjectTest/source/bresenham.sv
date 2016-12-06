@@ -20,7 +20,6 @@ module bresenham
 	logic [8:0] start_x_local;
 	logic [8:0] end_x_local;
 	logic [8:0] start_y_local;
-	logic [8:0] end_y_local;
 	logic [8:0] bx_local;
 	logic [8:0] by_local;
 	logic magnatude_gt_one;
@@ -61,28 +60,24 @@ module bresenham
 			start_x_local = start_x;
 			end_x_local = end_x;
 			start_y_local = {0, start_y};
-			end_y_local = end_y;
 		end else if (start_x < end_x)
 		begin   // |slope| > 1 and start to left of right
 			// swap x and y.
 			start_x_local = {0, start_y};
 			end_x_local = {0, end_y};
 			start_y_local = start_x;
-			end_y_local = end_x;
 		end else if (magnatude_gt_one == 1'b0)
 		begin   // |slope| < 1 and start to right of end
 			// swap start and end.
 			start_x_local = end_x;
 			end_x_local = start_x;
 			start_y_local = {0, end_y};
-			end_y_local = {0, start_y};
 		end else
 		begin   // |slope| > 1 and start to right of end
 			// swap x and y as well as start and end.
 			start_x_local = {0, end_y};
 			end_x_local = {0, start_y};
 			start_y_local = end_x;
-			end_y_local = start_x;
 		end
 	end
 	always_comb

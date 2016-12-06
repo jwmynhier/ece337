@@ -19,7 +19,8 @@ module clear
 			.count_enable(clear_enable), .rollover_val(9'd320), 
 			.count_out(cx), .rollover_flag(rollover1));
 
-	flex_counter #(8) Counter2 (.clk(clk), .n_rst(n_rst), .count_enable(rollover1),
+	flex_counter #(8) Counter2 (.clk(clk), .n_rst(n_rst), 
+			.count_enable(rollover1 & clear_enable),
 			.rollover_val(8'd241), .count_out(local_cy), 
 			.rollover_flag(clear_done));
 
