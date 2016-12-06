@@ -92,12 +92,16 @@ module render_rcu
 		end
 		CWAIT1:
 		begin
+			next_state = CWAIT2;
+		end
+		CWAIT2:
+		begin
 			if (clear_done == '1)
 			begin
 				next_state = END;
 			end else
 			begin
-				next_state = CWAIT2;
+				next_state = CLRSEND;
 			end
 		end
 		CWAIT2:
