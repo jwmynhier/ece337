@@ -21,8 +21,8 @@ module clear
 
 	flex_counter #(8) Counter2 (.clk(clk), .n_rst(n_rst), 
 			.count_enable(rollover1 & clear_enable),
-			.rollover_val(8'd241), .count_out(local_cy), 
-			.rollover_flag(clear_done));
+			.clear(y_rollover), .rollover_val(8'd241), 
+			.count_out(cy), .rollover_flag(clear_done));
 
 	// don't go out of bound on final rollover.	
 	assign y_rollover = cy == 8'd240;
