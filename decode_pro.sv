@@ -189,8 +189,8 @@ begin
 				if(command_bus[26:24] == 3'b101) //not rendering and move end
 				begin
 					next_state = MOVEEND;
-					x = commandreg[16:8] + endl_c[16:8];
-					y = commandreg[7:0] + endl_c[7:0];
+					x = commandreg[16:8] + end1_c[16:8];
+					y = commandreg[7:0] + end1_c[7:0];
 					next_start = {x,y};
 					next_op = 3'b101;
 				end
