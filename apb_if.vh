@@ -13,8 +13,8 @@ interface apb_if;
    logic PWRITE, PREADY, PSEL, PENABLE, PSLVERR;
 
    modport apb_s (
-     input PADDR, PRDATA, PWRITE, PSEL, PENABLE,
-     output PWDATA, PSLVERR, PREADY
+     input PADDR,PWDATA , PWRITE, PSEL, PENABLE,
+     output PRDATA, PSLVERR, PREADY
    );
 endinterface // apb_if
 
