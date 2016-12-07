@@ -7,7 +7,7 @@ module APB_SlaveInterface(
 	apb_if.apb_s apb,
 	input logic pclk,
 	input logic n_rst,
-	input logic status_value,
+	input logic [31:0] status_value,
 	output logic [31:0] command_bus,
 	output logic penable
 );
@@ -71,7 +71,7 @@ begin
 	end
 	else
 	begin
-			state <= next_state;
+		state <= next_state;
 	end
 end
 
@@ -79,17 +79,19 @@ end
 always_comb
 begin
 	//default
-	penable = apb.PENABLE;
-
+	penable = 1'b0;
+	command_bus = apb.PWDATA;
+	apb.PRDATA = 32'b0;
+	
 	case(state)
 		READ:
 		begin
-			
-			apb.PRDATA = {32{status_value}};
+			apb.PRDATA = status_value;
 		end
 		WRITE:
 		begin
 			command_bus = apb.PWDATA;
+			penable = 1'b1; // high for 2 cycles, but decode handles it
 			
 		end
 	endcase
