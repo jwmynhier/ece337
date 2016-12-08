@@ -164,20 +164,19 @@ module tb_GPU();
 
 
 	// Decompose the flat packed address with offset into x and y coordinates
+	// Write to buffer.
 	logic [31:0] flat_address;
-	always_comb
+	always @ (tb_HADDR)
 	begin
-		flat_address = tb_HADDR - initial_buffer_address;
-		buffer_x = (flat_address % (XWIDTH*4)) / 4;
-		buffer_y = (flat_address - 4*buffer_x) / (4*XWIDTH);
-	end
-	
-	// Write to buffer
-	always_ff @ (negedge tb_clk)
-	begin
-		if (tb_HWRITE == 1'b0)
+		@(negedge tb_clk)
 		begin
-			buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = tb_HWDATA;
+			if (tb_HADDR != '0)
+			begin
+				flat_address = tb_HADDR - initial_buffer_address;
+				buffer_x = (flat_address % (XWIDTH*4)) / 4;
+				buffer_y = (flat_address - 4*buffer_x) / (4*XWIDTH);
+				buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = tb_HWDATA;
+			end
 		end
 	end
 
