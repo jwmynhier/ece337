@@ -83,6 +83,10 @@ module tb_GPU();
 		@(negedge tb_clk);
 
 		tb_PSEL = 1'b0;
+		
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+		@(negedge tb_clk);
 	end
 	endtask
 
