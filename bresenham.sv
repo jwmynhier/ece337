@@ -55,12 +55,12 @@ module bresenham
 	always_comb
 	begin
 
-		if (magnatude_gt_one == 1'b0 && start_x < end_x)
+		if (magnatude_gt_one == 1'b0 && start_x <= end_x)
 		begin   // |slope| < 1 and start to left of right
 			start_x_local = start_x;
 			end_x_local = end_x;
 			start_y_local = {0, start_y};
-		end else if (start_x < end_x)
+		end else if (start_x <= end_x)
 		begin   // |slope| > 1 and start to left of right
 			// swap x and y.
 			start_x_local = {0, start_y};
