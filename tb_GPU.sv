@@ -245,6 +245,7 @@ module tb_GPU();
 	end
 	endtask
 	
+	logic [7:0] dummy_var;		// used to gather input from stdin.
 	
 	initial
 	begin
@@ -272,6 +273,11 @@ module tb_GPU();
 		#(2004*CLK_PERIOD);
 
 		write_buffer;
+		// pause simulation until given user input.
+		$display("Press enter to continue.");		
+		dummy = $fgetc('h8000_0000);
+		
+		
 		$info("done");
 	end
 
