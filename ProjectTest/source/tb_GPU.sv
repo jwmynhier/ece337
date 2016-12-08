@@ -51,7 +51,7 @@ module tb_GPU
 		begin
 			for (j=0; j<XWIDTH; j++)
 			begin
-				buffer[i][j][PIXWIDTH-1:0] = 24'd255;
+				buffer[i][j][PIXWIDTH-1:0] = 24'hffffff;
 			end
 		end
 	end
