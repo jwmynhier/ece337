@@ -168,8 +168,8 @@ module tb_GPU();
 	always_comb
 	begin
 		flat_address = tb_HADDR - initial_buffer_address;
-		buffer_x = flat_address % XWIDTH;
-		buffer_y = (flat_address - {8'b0, buffer_x}) / XWIDTH;
+		buffer_x = (flat_address % (XWIDTH*4)) / 4;
+		buffer_y = (flat_address - 4*buffer_x) / (4*XWIDTH);
 	end
 	
 	// Write to buffer
