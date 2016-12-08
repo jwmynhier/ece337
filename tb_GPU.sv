@@ -253,26 +253,26 @@ module tb_GPU();
 	
 		
 		
-		setStart(9'd0, 8'd10);
-		setEnd(9'd5, 8'd20);
+		setStart(9'd0, 8'd0);
+		setEnd(9'd319, 8'd239);
 				
 		setColor(24'hFF0000);
 		
 		draw;
 
-		#(100*CLK_PERIOD);
-		/*
-		setStart(9'd250, 8'd10);
-		setEnd(9'd260, 8'd15);
+		#(2004*CLK_PERIOD);
 		
-	
-		moveStart(9'd10, 8'd10); //final -> (10, 20)
-		moveEnd(9'd40, 8'd110);  //final -> (45, 130)
-		*/
+		moveStart(9'd319, 8'd0); //final -> (10, 20)
+		//moveEnd(9'd40, 8'd110);  //final -> (45, 130)
+		setEnd(9'd0, 8'd239);
 
 		flip;
 		draw;
+
+		#(2004*CLK_PERIOD);
+
 		write_buffer;
+		$info("done");
 	end
 
-endmodule 
+endmodule
