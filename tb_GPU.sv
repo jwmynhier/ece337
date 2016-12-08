@@ -175,7 +175,7 @@ module tb_GPU();
 				flat_address = tb_HADDR - initial_buffer_address;
 				buffer_x = (flat_address % (XWIDTH*4)) / 4;
 				buffer_y = (flat_address - 4*buffer_x) / (4*XWIDTH);
-				buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = tb_HWDATA;
+				buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = tb_HWDATA[23:0];
 			end
 		end
 	end
