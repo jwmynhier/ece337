@@ -10,9 +10,7 @@ if __name__ == "__main__":
 	with open(sys.argv[1], "r") as filehandle:
 		fileList = filehandle.readlines()
 
-	pixelsInRows = [re.findall(r'(.+?);', row) for row in fileList]
-
-	print("row: {} width: {} ex: {}".format(len(pixelsInRows), len(pixelsInRows[0]), pixelsInRows[0][0]))
+	pixelsInRows = [re.findall(r'(.+?);', row) for row in fileList[:-1]]
 
 	threeDList = []
 	for row in pixelsInRows:
@@ -23,6 +21,5 @@ if __name__ == "__main__":
 		threeDList.append(rowList)
 
 	colorImage = np.array(threeDList, dtype=np.uint8)
-	print("{}".format(colorImage.shape))
 	misc.imsave(sys.argv[2], colorImage)
 
