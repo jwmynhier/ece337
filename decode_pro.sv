@@ -137,7 +137,7 @@ begin
 				begin
 					next_state = STARTC;
 					received_op_next = 1'b1;
-					next_color = 24'hFFF;
+					next_color = 24'hFFFFFF;
 					next_op = 3'b000;
 				end
 			end
@@ -267,3 +267,4 @@ assign color = {8'b0,color_c};
 
 endmodule
  
+
