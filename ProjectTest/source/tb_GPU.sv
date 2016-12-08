@@ -7,9 +7,8 @@
 module tb_GPU
 ();
 
-	// track the number of output frames
-	int image_number = 0;
-
+	// Buffer tracking and rendering signals.
+	int image_number = 0;				// track the number of output frames
 	localparam initial_buffer_address = '0;		// first address in buffer. REVISE.
 	localparam YWIDTH = 'd480;			// store two 240 pixel tall buffers one above the other
 	localparam XWIDTH = 'd320;
@@ -18,27 +17,12 @@ module tb_GPU
 	int buffer_x;
 	int buffer_y;
 
-	// TEMP
-	logic [23:0] tb_address = '0;
-	logic [PIXWIDTH-1:0] data = '0;
-	logic HWRITE = 1'b0;
-	logic tb_clk;
-	localparam CLK_PERIOD = 15ns;
-	// set up clock
-	always
-	begin
-		tb_clk = 1'b0;
-		#(CLK_PERIOD / 2.0);
-		tb_clk = 1'b1;
-		#(CLK_PERIOD / 2.0);
-	end
 
-	// decompose the flat packed address with offset into x and y coordinates
-	// REVISE: assumed address data taken from AHB was called "tb_address".
-	logic [23:0] flat_address;			// REVISE with correct bitwidth
+	// Decompose the flat packed address with offset into x and y coordinates
+	logic [31:0] flat_address;
 	always_comb
 	begin
-		flat_address = tb_address - initial_buffer_address;
+		flat_address = tb_HADDR - initial_buffer_address;
 		buffer_x = flat_address % XWIDTH;
 		buffer_y = (flat_address - {8'b0, buffer_x}) / XWIDTH;
 	end
@@ -108,13 +92,11 @@ module tb_GPU
 	endtask
 
 	// output logic
-	// REVISE: name of HWRITE in AHB interface. Assumed HWRITE.
-	// REVISE: name of color data that comes off the AHB. Assumed data.
 	always_ff @ (negedge tb_clk)
 	begin
-		if (HWRITE == 1'b0)
+		if (tb_HWRITE == 1'b0)
 		begin
-			buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = data;
+			buffer[buffer_y][buffer_x][PIXWIDTH-1:0] = tb_HWDATA;
 		end
 	end
 
