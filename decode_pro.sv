@@ -191,7 +191,7 @@ begin
 					next_state = MOVEEND;
 					x = commandreg[16:8] + end1_c[16:8];
 					y = commandreg[7:0] + end1_c[7:0];
-					next_start = {x,y};
+					next_end1 = {x,y};
 					next_op = 3'b101;
 				end
 			end	
