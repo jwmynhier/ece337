@@ -20,8 +20,6 @@ module controller
 
 	state_name c_state, n_state;
 
-	reg render_state;	//Used to ouput the current state of render and the busy bit.
-
 	//state reg
 	always_ff @ (posedge clk, negedge n_rst)
     	begin
@@ -39,19 +37,20 @@ module controller
 	always_comb
 	begin
   	n_state = c_state; 
-		render_state = 1'b0;
+		render_enable = 1'b0;
+		status = 32'h00000000;
 		
  		case (c_state)
 		IDLE:
 		begin
-			render_state = 1'b0;
 			if(received_op == 1'b1)
 				n_state = RENDER;
 		end
 
 		RENDER:
 		begin
-			render_state = 1'b1;
+			render_enable = 1'b1;
+			status = 32'h00000001;
 			if(render_done == 1'b1)
 			begin				
 				n_state = IDLE;
@@ -60,20 +59,4 @@ module controller
 		endcase
 	end
 
-	//output reg
-	always_ff @ (negedge n_rst, posedge clk)
-	begin 
-		if (!n_rst)
-		begin
-			render_enable <= 1'b0;
-			status <= 32'h0000;
-		end
-		else
-		begin
-			render_enable <= render_state;
-			status <= {31'h0,render_state};
-		end
-	end
-
 endmodule
-
