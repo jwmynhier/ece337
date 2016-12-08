@@ -8,8 +8,8 @@ module memoryManager(
 );
 
 //start addresses of buffers
-localparam [31:0] startAddr1 = 32'h0000;
-localparam [31:0] startAddr2 = 32'h8000;
+localparam [31:0] startAddr1 = 32'd0;
+localparam [31:0] startAddr2 = 32'd307200;
 
 //internal signals
 logic [31:0]start_addr;
