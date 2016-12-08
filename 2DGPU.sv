@@ -29,7 +29,7 @@ module 2DGPU(
 	logic [31:0] command_wire;	// apb 			-> decode
 	
 	//APB
-	module APB_SlaveInterface(
+	APB_SlaveInterface apb(
 		.apb(apbif),
 		.pclk(clk),
 		.n_rst(n_rst),
