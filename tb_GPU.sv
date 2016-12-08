@@ -93,7 +93,7 @@ module tb_GPU();
 		@(negedge tb_clk);
 
 		tb_PSEL = 1'b0;
-		
+
 		@(negedge tb_clk);
 		@(negedge tb_clk);
 		@(negedge tb_clk);
@@ -104,6 +104,7 @@ module tb_GPU();
 	task setColor;
 		input logic [23:0] color; 
 	begin
+		$info("sending color red");			
 		sendCmd(3'b011,color);
 	end
 	endtask 
@@ -112,6 +113,7 @@ module tb_GPU();
 		input logic [8:0] x;
 		input logic [7:0] y;
 	begin
+		$info("set start");		
 		sendCmd(3'b001,{7'b0,x,y});
 	end	
 	endtask
@@ -120,6 +122,7 @@ module tb_GPU();
 		input logic [8:0] x;
 		input logic [7:0] y;
 	begin
+		$info("set end");	
 		sendCmd(3'b010,{7'b0,x,y});
 	end	
 	endtask
@@ -148,6 +151,7 @@ module tb_GPU();
 
 	task draw;
 	begin
+		$info("draw line");
 		sendCmd(3'b110,24'b0);
 	end
 	endtask 
@@ -157,6 +161,7 @@ module tb_GPU();
 		sendCmd(3'b000,24'b0);
 	end
 	endtask 
+
 
 	// Decompose the flat packed address with offset into x and y coordinates
 	logic [31:0] flat_address;
@@ -239,13 +244,23 @@ module tb_GPU();
 		
 	end
 	endtask
-
+	
+	
 	initial
 	begin
 		reset;
 	
-		$info("sending color red");	
+		
+		
+		setStart(9'b0, 8'b11101111);
+		setEnd(9'b10, 8'b11101111);
+				
 		setColor(24'hFF0000);
+		
+		//setEnd(9'b0, 8'b11101111);
+		draw;
+
+	
 	end
 
 endmodule 
