@@ -1,4 +1,3 @@
-
 module render_rcu
 (
 	input clk,
@@ -15,7 +14,9 @@ module render_rcu
 	output logic clear_enable
 );
 
-	typedef enum bit [3:0] { WAIT, NEXT_INIT, NEXT, SEND, SWAIT1, SWAIT2, CLRNEXT, CLRSEND, CWAIT1, CWAIT2, END} state_type;
+	typedef enum bit [3:0] { WAIT, NEXT_INIT, NEXT, SEND, SWAIT1, 
+				 SWAIT2, CLRNEXT, CLRSEND, CWAIT1, 
+			         CWAIT2, HOLD, END} state_type;
 
 	// DEBUG
 	localparam OP_CLEAR = '0;
@@ -79,6 +80,10 @@ module render_rcu
 			end
 		end
 		END:
+		begin
+			next_state = HOLD;
+		end
+		HOLD:
 		begin
 			next_state = WAIT;
 		end
