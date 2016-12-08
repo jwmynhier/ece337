@@ -8,40 +8,40 @@ module memoryManager(
 );
 
 //start addresses of buffers
-	localparam [31:0] startAddr1 = 32'd1;
-	localparam [31:0] startAddr2 = 32'd307201;
+localparam [31:0] startAddr1 = 32'd1;
+localparam [31:0] startAddr2 = 32'd307201;
 
-	//internal signals
-	logic [31:0]start_addr;
-	logic addr_sel;
+//internal signals
+logic [31:0]start_addr;
+logic addr_sel;
 
-	//start address select mux 
-	always_comb
+//start address select mux 
+always_comb
+begin
+	if(addr_sel == 1'b0)
 	begin
-		if(addr_sel == 1'b0)
-		begin
-			start_addr <= startAddr1;
-		end
-		else
-		begin
-			start_addr <= startAddr2;
-		end	
+		start_addr <= startAddr1;
 	end
-
-	//address state reg 
-	always@(negedge n_rst, posedge clk)
+	else
 	begin
-		if(n_rst == 1'b0)
-		begin
-			addr_sel <= 1'b0;
-		end
-		else
-		begin
-			//addr_sel flips when a pulse on the flip_buffer input occurs
-			addr_sel <= addr_sel ^ flip_buffer;
-		end
-	end  
+		start_addr <= startAddr2;
+	end	
+end
 
-	assign addr = start_addr + (y*1280) + (x*4);
+//address state reg 
+always@(negedge n_rst, posedge clk)
+begin
+	if(n_rst == 1'b0)
+	begin
+		addr_sel <= 1'b0;
+	end
+	else
+	begin
+		//addr_sel flips when a pulse on the flip_buffer input occurs
+		addr_sel <= addr_sel ^ flip_buffer;
+	end
+end  
+
+assign addr = start_addr + (y*1280) + (x*4);
 
 endmodule
