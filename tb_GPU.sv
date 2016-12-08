@@ -100,6 +100,23 @@ module tb_GPU();
 	end
 	endtask
 
+	task getStatus;
+	begin
+		tb_PSEL = 1'b1;
+		tb_PWRITE = 1'b0;
+		//tb_PADDR = 'd100;  // REVISE
+	
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+
+		tb_PSEL = 1'b0;
+
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+	end
+	endtask
+
 
 	task setColor;
 		input logic [23:0] color; 
@@ -247,6 +264,7 @@ module tb_GPU();
 	
 	logic [7:0] dummy_var;		// used to gather input from stdin.
 	
+	int i;
 	initial
 	begin
 		reset;
@@ -274,8 +292,23 @@ module tb_GPU();
 
 		write_buffer;
 		// pause simulation until given user input.
-		$display("Press enter to continue.");		
-		dummy = $fgetc('h8000_0000);
+		//$display("Press enter to continue.");		
+		//dummy = $fgetc('h8000_0000);
+		setStart(9'd0, 8'd0);
+		setEnd(9'd0, 8'd239);
+		draw;
+		#(2004*CLK_PERIOD);
+
+		for (i=0; i<320; i=i+1)
+		begin
+			moveStart(9'd1, 8'd0);
+			moveend(9'd1, 8'd0);
+			draw;
+			#(2004*CLK_PERIOD);
+			
+		end
+		write_buffer;
+		
 		
 		
 		$info("done");
