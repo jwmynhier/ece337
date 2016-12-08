@@ -248,6 +248,7 @@ module tb_GPU();
 	initial
 	begin
 		reset;
+		buffer_init;
 	
 		
 		
@@ -270,6 +271,7 @@ module tb_GPU();
 
 		flip;
 		draw;
+		write_buffer;
 	end
 
 endmodule 
