@@ -1,10 +1,11 @@
 //AHB master implementation for Memory Manger module within the '2D-GPU' ECE 337 project
-//12/2/16 - Dwezil D'souza 
-
-`include "ahb_if.vh"
+//12/2/16 - Dwezil D'souza
 
 module AHB_MasterInterface(
-	ahb_if.ahb_m ahb,
+	output logic [31:0] HWDATA,
+	output logic [31:0] HADDR,	
+	output logic HWRITE,
+	input logic HREADY,
 	input logic hclk,
 	input logic n_rst,
 	input logic [31:0] pixel_address,
@@ -42,7 +43,7 @@ begin
 
 		DATA:
 		begin
-			if(1'b1 == ahb.HREADY)
+			if(1'b1 == HREADY)
 			begin
 				next_state = IDLE;
 			end
@@ -67,20 +68,20 @@ end
 always_comb
 begin
 	//default
-	ahb.HWDATA = '0;
-	ahb.HADDR = '0;	
-	ahb.HWRITE = 1'b1;
+	HWDATA = '0;
+	HADDR = '0;	
+	HWRITE = 1'b1;
 
 	case(state)
 		ADDR:
 		begin
-			ahb.HADDR = pixel_address;
-			ahb.HWRITE = 1'b1;
+			HADDR = pixel_address;
+			HWRITE = 1'b1;
 		end
 		
 		DATA:
 		begin
-			ahb.HWDATA = color_data;
+			HWDATA = color_data;
 		end
 	endcase
 

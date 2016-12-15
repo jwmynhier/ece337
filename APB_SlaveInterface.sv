@@ -1,10 +1,11 @@
 //APB slave implementation for  '2D-GPU' ECE 337 project
 //12/6/16 - Nithin V
 
-`include "apb_if.vh"
-
 module APB_SlaveInterface(
-	apb_if.apb_s apb,
+	input logic [31:0] PWDATA,
+	input logic PSEL,
+	input logic PWRITE,
+	output logic [31:0] PRDATA,
 	input logic pclk,
 	input logic n_rst,
 	input logic [31:0] status_value,
@@ -29,9 +30,9 @@ begin
 	case(state)
 		IDLE:
 		begin
-			if(1'b1 == apb.PSEL)
+			if(1'b1 == PSEL)
 			begin
-				if(1'b1 == apb.PWRITE)
+				if(1'b1 == PWRITE)
 				begin
 					next_state = WRITE;
 				end
@@ -45,7 +46,7 @@ begin
 		
 		WRITE:
 		begin
-			if(1'b0 == apb.PSEL)
+			if(1'b0 == PSEL)
 			begin
 				next_state = IDLE;
 			end
@@ -54,7 +55,7 @@ begin
 
 		READ:
 		begin
-			if(1'b0 == apb.PSEL)
+			if(1'b0 == PSEL)
 			begin
 				next_state = IDLE;
 			end
@@ -80,17 +81,17 @@ always_comb
 begin
 	//default
 	penable = 1'b0;
-	command_bus = apb.PWDATA;
-	apb.PRDATA = 32'b0;
+	command_bus = PWDATA;
+	PRDATA = 32'b0;
 	
 	case(state)
 		READ:
 		begin
-			apb.PRDATA = status_value;
+			PRDATA = status_value;
 		end
 		WRITE:
 		begin
-			command_bus = apb.PWDATA;
+			command_bus = PWDATA;
 			penable = 1'b1; // high for 2 cycles, but decode handles it
 			
 		end
@@ -98,3 +99,4 @@ begin
 end
 
 endmodule
+

@@ -1,8 +1,5 @@
 `timescale 1ns / 100ps
 
-`include "ahb_if.vh"
-`include "apb_if.vh"
-
 module tb_GPU();
 
 	parameter CLK_PERIOD				= 15;
@@ -16,23 +13,11 @@ module tb_GPU();
 	logic tb_HREADY;
 	logic tb_HWRITE;
 
-	ahb_if ahb();
-	assign tb_HWDATA = ahb.HWDATA;
-	assign tb_HADDR = ahb.HADDR;
-	assign ahb.HREADY = tb_HREADY;
-	assign tb_HWRITE = ahb.HWRITE;
-
 	//APB signals
 	logic tb_PSEL;
 	logic tb_PWRITE;
 	logic [31:0] tb_PWDATA;
 	logic [31:0] tb_PRDATA;
-
-	apb_if apb();
-	assign apb.PSEL = tb_PSEL;
-	assign apb.PWDATA = tb_PWDATA; 
-	assign apb.PWRITE = tb_PWRITE;
-	assign tb_PRDATA = apb.PRDATA;
 
 	// Buffer tracking and rendering signals.
 	int image_number = 0;				// track the number of output frames
@@ -44,12 +29,18 @@ module tb_GPU();
 	int buffer_x;
 	int buffer_y;
 
-	//DUT
+//DUT
 	GPU DUT(
 		.clk(tb_clk),
 		.n_rst(tb_n_rst),
-		.ahbif(ahb.ahb_m),
-		.apbif(apb.apb_s)
+		.HWDATA(tb_HWDATA),
+		.HADDR(tb_HADDR),
+		.HWRITE(tb_HWRITE),
+		.HREADY(tb_HREADY),
+		.PSEL(tb_PSEL),
+		.PWRITE(tb_PWRITE),
+		.PWDATA(tb_PWDATA),
+		.PRDATA(tb_PRDATA)
 	);
 
 	// Clock generation block

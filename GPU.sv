@@ -1,14 +1,17 @@
 // top level for 2d-GPU project for ECE 337 - Fall 2016
 // team members: Dwezil D, Nithin V, Pranav G, Joe M
 
-`include "ahb_if.vh"
-`include "apb_if.vh"
-
 module GPU(
 	input logic clk,
 	input logic n_rst,
-	ahb_if.ahb_m ahbif,
-	apb_if.apb_s apbif
+	output logic [31:0]HWDATA,
+	output logic [31:0] HADDR,	
+	output logic HWRITE,
+	input logic HREADY,
+	input logic [31:0] PWDATA,
+	input logic PSEL,
+	input logic PWRITE,
+	output logic [31:0] PRDATA
 );
 
 	//internal signals		FROM			-> TO
@@ -30,7 +33,10 @@ module GPU(
 	
 	//APB
 	APB_SlaveInterface apb(
-		.apb(apbif),
+		.PWDATA(PWDATA),
+		.PRDATA(PRDATA),
+		.PSEL(PSEL),
+		.PWRITE(PWRITE),
 		.pclk(clk),
 		.n_rst(n_rst),
 		.status_value(status),		// <- controller
@@ -69,7 +75,10 @@ module GPU(
 
 	//ahb
 	AHB_MasterInterface ahb(	
-		.ahb(ahbif),
+		.HWDATA(HWDATA),
+		.HADDR(HADDR),
+		.HWRITE(HWRITE),
+		.HREADY(HREADY),
 		.hclk(clk),
 		.n_rst(n_rst),
 		.pixel_address(address),	// <- memory manager
@@ -82,7 +91,7 @@ module GPU(
 		.addr(address),			// -> ahb
 		.n_rst(n_rst),
 		.clk(clk), 
-  		.x(x),				// <- render
+  	.x(x),				// <- render
 		.y(y),				// <- render
 		.flip_buffer(flip_buffer)	// <- decode
 	);
