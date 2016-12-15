@@ -1,0 +1,96 @@
+`timescale 1ns / 100ps
+
+
+module tb_controller();
+
+	parameter CLK_PERIOD = 15;
+
+	logic tb_n_rst;
+	logic tb_clk;
+	logic tb_render_done; 
+	logic tb_render_enable; 
+	logic tb_received_op;
+	logic [31:0] tb_status;
+
+controller DUT(
+		.clk(tb_clk),
+		.n_rst(tb_n_rst),
+		.received_op(tb_received_op),
+		.render_done(tb_render_done),
+		.status(tb_status),
+		.render_enable(tb_render_enable));
+
+	// Clock generation block
+	always
+	begin
+		tb_clk = 1'b0;
+		#(CLK_PERIOD/2.0);
+		tb_clk = 1'b1;
+		#(CLK_PERIOD/2.0);
+	end
+
+	//task to reset module
+	task reset;
+	begin
+		tb_n_rst = 1'b1;
+
+		tb_render_enable = 1'b0;
+		tb_status = 32'b0;
+		
+		@(negedge tb_clk);
+
+		tb_n_rst = 1'b0;
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+		@(negedge tb_clk);
+		tb_n_rst = 1'b1;
+		@(negedge tb_clk);
+	end	
+	endtask
+
+
+
+	initial
+	begin
+
+	reset;
+	assert(tb_render_enable == 1'b0)
+	 $info(" reset test render enable is correct");
+	else
+	 $error("Error renderenable");
+	assert(tb_status == 32'h00000000)
+	 $info(" reset test status is correct");
+	else
+	 $error("Error status");
+	@(posedge tb_clk);
+	tb_received_op = 1'b1;
+	@(posedge tb_clk);
+	tb_received_op = 1'b0;
+	@(posedge tb_clk);
+	assert(tb_render_enable == 1'b1)
+	 $info("render enable is correct for rec_op");
+	else
+	 $error("Error renderenable for rec_op");
+	assert(tb_status == 32'h00000001)
+	 $info("status is correct");
+	else
+	 $error("Error status");
+	@(posedge tb_clk);
+	tb_render_done = 1'b1;
+	@(posedge tb_clk);
+	tb_render_done = 1'b0;
+	@(posedge tb_clk);
+	assert(tb_render_enable == 1'b0)
+	 $info(" test 3 render enable is correct at end of render");
+	else
+	 $error("Error renderenable");
+	assert(tb_status == 32'h00000000)
+	 $info(" test 3 status is correct at end of render");
+	else
+	 $error("Error status");
+	
+
+	end
+
+
+endmodule
