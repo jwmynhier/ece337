@@ -4,7 +4,7 @@
 
 module tb_APB_SlaveInterface();
 
-	parameter CLK_PERIOD = 66.67;
+	parameter CLK_PERIOD = 15;
 
 	logic tb_n_rst;
 	logic tb_clk;
