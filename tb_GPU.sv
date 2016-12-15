@@ -5,7 +5,7 @@
 
 module tb_GPU();
 
-	parameter CLK_PERIOD				= 66.67;
+	parameter CLK_PERIOD				= 15;
 
 	logic tb_n_rst;
 	logic tb_clk;
@@ -302,7 +302,7 @@ module tb_GPU();
 		for (i=0; i<320; i=i+1)
 		begin
 			moveStart(9'd1, 8'd0);
-			moveend(9'd1, 8'd0);
+			moveEnd(9'd1, 8'd0);
 			draw;
 			#(2004*CLK_PERIOD);
 			
